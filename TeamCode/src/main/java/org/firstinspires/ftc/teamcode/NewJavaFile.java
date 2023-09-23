@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @TeleOp
 public class NewJavaFile extends OpMode {
     public DcMotorEx motorBL,motorBR,motorFR,motorFL;
-    public DcMotorEx sliderL,sliderR;
+    public DcMotorEx rotitor_sus,sliderL,sliderR;
     @Override
     public void init() {
 
