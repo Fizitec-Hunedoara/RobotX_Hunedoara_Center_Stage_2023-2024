@@ -32,7 +32,7 @@ public class centerstageRX extends OpMode {
     double pmotorBR;
     double pmotorFL;
     double pmotorFR;
-
+    ChestiiDeAutonom c = new ChestiiDeAutonom();
     boolean stop = false, lastx = false, lasty = false, sliderState = true, aIntrat = false,aAjuns = true,aInchis = true;
     double intPoz = 0.4, servoPos = 0.0;
     /*Functia de init se ruleaza numai o data, se folosete pentru initializarea motoarelor si chestii :)*/
@@ -86,6 +86,7 @@ public class centerstageRX extends OpMode {
     public void start(){
         Chassis.start();
         Systems.start();
+        macet.start();
     }
     /*Aici se declara thread-ul cu numele chassis, pentru ca contine partea de program care se ocupa de sasiu*/
     private final Thread Chassis = new Thread(new Runnable() {
@@ -155,6 +156,23 @@ public class centerstageRX extends OpMode {
             motorBR.setPower(ds1);
         }
     });
+    public void slidertarget(int poz, double vel, double t, int tolerance) {
+        if(rotitor_sus.getCurrentPosition() < poz){
+            rotitor_jos.setVelocity(-Math.abs(vel));
+            rotitor_sus.setVelocity(Math.abs(vel));
+        }
+        else{
+            rotitor_jos.setVelocity(Math.abs(vel));
+            rotitor_sus.setVelocity(-Math.abs(vel));
+        }
+        double lastTime = System.currentTimeMillis();
+        while (Math.abs(poz - rotitor_sus.getCurrentPosition()) > tolerance
+                && Math.abs(poz - rotitor_jos.getCurrentPosition()) > tolerance
+                && lastTime + t > System.currentTimeMillis()) {
+        }
+        rotitor_jos.setVelocity(0);
+        rotitor_sus.setVelocity(0);
+    }
     /*Aici se declara thread-ul cu numele systems, pentru ca contine partea de program care se ocupa de sisteme*/
     private final Thread Systems = new Thread(new Runnable() {
         @Override
@@ -176,64 +194,79 @@ public class centerstageRX extends OpMode {
 //                    }
 //                }
 //                if(xval!=1){
-//                    maceta.setPower(0);
+//                    maceta.setPower(0)dpd = gamepad2.dpad_down;
+//                dpu = gamepad2.dpad_up;
+//                sliderL.setPower(gamepad2.right_stick_y);
+//                sliderR.setPower(gamepad2.right_stick_y);
+//                if(gamepad2.left_trigger > 0){
+//                    slow = 2;
 //                }
-                    if(gamepad2.dpad_down && maceta.getPower() == 0){
-                        maceta.setPower(1);
-                    }
-                    if(gamepad2.dpad_up && maceta.getPower() == 0){
-                        maceta.setPower(-1);
-                    }
-                    if ((gamepad2.dpad_up || gamepad2.dpad_down) && maceta.getPower() != 0){
-                        maceta.setPower(0);
-                    }
+//                else{
+//                    slow = 1;
+//                }
+//                if(gamepad2.right_trigger > 0){
+//                    plauncher.setPosition(0.5);
+//                }
+//                else{
+//                    plauncher.setPosition(0.35);
+//                }
+//                rotitor_jos.setPower(gamepad2.left_stick_y/slow);
+//                rotitor_sus.setPower(gamepad2.left_stick_y/slow);
+//                if(gamepad2.b != bl){
+//                    bval+=0.5;
+//                    if(bval>=1){
+//                        bval=0;
+//                    }
+//                };
+//                }
 
-
-                dpd = gamepad2.dpad_down;
-                dpu = gamepad2.dpad_up;
-                sliderL.setPower(gamepad2.right_stick_y);
-                sliderR.setPower(gamepad2.right_stick_y);
-                if(gamepad2.left_trigger > 0){
-                    slow = 2;
-                }
-                else{
-                    slow = 1;
-                }
-                if(gamepad2.right_trigger > 0){
+                /*if(gamepad2.x){
+                    c.target(-1300,1200,rotitor_jos,10000,10);
                     plauncher.setPosition(0.5);
-                }
-                else{
-                    plauncher.setPosition(0);
-                }
-                rotitor_jos.setPower(gamepad2.left_stick_y/slow);
-                rotitor_sus.setPower(gamepad2.left_stick_y/slow);
-                if(gamepad2.b != bl){
-                    bval+=0.5;
-                    if(bval>=1){
-                        bval=0;
-                    }
-                }
+                }*/
                 bl = gamepad2.b;
-                if(bval==0.5 && gamepad2.b && !enter) {
-                    enter = true;
+                if(bval==0.5 && gamepad2.b) {
+                    bval+=0.0001;
                     gherutaR.setPosition(0.15);
                     gherutaL.setPosition(0.63);
                     lastTime = System.currentTimeMillis();
-                    while (lastTime + 100 > System.currentTimeMillis()) {
+                    while (lastTime + 150 > System.currentTimeMillis()) {
                     }
                     gherutaL.setPosition(0.38);
                     gherutaR.setPosition(0.38);
-                    enter = false;
                 }
-                if (gamepad2.a){
-                    gherutaR.setPosition(0.15);
-                    gherutaL.setPosition(0.63);
-                }
-                if (gamepad2.y){
+                if(rotitor_jos.getCurrentPosition() > -400){
                     gherutaR.setPosition(0.38);
                     gherutaL.setPosition(0.38);
                 }
+                else {
+                    if (gamepad2.a) {
+                        gherutaR.setPosition(0.15);
+                        gherutaL.setPosition(0.63);
+                    }
+                    if (gamepad2.y) {
+                        gherutaR.setPosition(0.38);
+                        gherutaL.setPosition(0.38);
+                    }
+                }
             }
+        }
+    });
+    private final Thread macet = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            /*while (!stop) {
+                if(gamepad2.dpad_down && maceta.getPower() == 0){
+                    macetaPow=1;
+                }
+                else if(gamepad2.dpad_up && maceta.getPower() == 0){
+                    macetaPow=-1;
+                }
+                else if (gamepad2.right_bumper){
+                    macetaPow=0;
+                }
+                maceta.setPower(macetaPow);
+            }*/
         }
     });
     /*Aici se afla partea de program care arata cand programul se opreste, este foarte folositor pentru functionarea thread-urilor*/

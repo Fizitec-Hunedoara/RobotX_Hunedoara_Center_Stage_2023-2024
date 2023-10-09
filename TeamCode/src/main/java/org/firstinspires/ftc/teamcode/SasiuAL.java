@@ -77,10 +77,10 @@ public class SasiuAL extends OpMode {
                 rx = gamepad1.right_stick_x;
 
                 /* Liniile astea de cod iau niste variabile care reprezinta puterea fiecarui motor, cu ajutorul puterilor de la controller*/
-                pmotorFL = y + x + rx;
-                pmotorBL = -y - x + rx;
-                pmotorBR = -y + x - rx;
-                pmotorFR = y - x - rx;
+                pmotorFL = y  + rx;
+                pmotorBL = y  + rx;
+                pmotorBR = y  - rx;
+                pmotorFR = y  - rx;
 
                 /*Secventele urmatoare de cod stabilesc maximul dintre modulele puterilor motoarelor cu un anumit scop...*/
                 max = abs(pmotorFL);
