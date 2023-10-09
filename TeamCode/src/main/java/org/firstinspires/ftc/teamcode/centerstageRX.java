@@ -11,6 +11,7 @@ import android.widget.Switch;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,7 +22,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @TeleOp
 public class centerstageRX extends OpMode {
     public Switch swish;
-    public DcMotorEx motorBR,motorBL,motorFL,motorFR,sliderL,sliderR,rotitor_sus,rotitor_jos;
+    public DcMotorEx motorBR,motorBL,motorFL,motorFR,slider,melcsus,melcjos;
     public Servo gherutaL,gherutaR,plauncher;
     public CRServo maceta;
     double sm = 1, slow = 1, lb = 1, rb = 1,bval=0,xval=0;
@@ -35,18 +36,21 @@ public class centerstageRX extends OpMode {
     ChestiiDeAutonom c = new ChestiiDeAutonom();
     boolean stop = false, lastx = false, lasty = false, sliderState = true, aIntrat = false,aAjuns = true,aInchis = true;
     double intPoz = 0.4, servoPos = 0.0;
+    AnalogInput potentiometru;
     /*Functia de init se ruleaza numai o data, se folosete pentru initializarea motoarelor si chestii :)*/
     @Override
     public void init() {
         /* Liniile astea de cod fac ca motoarele sa corespunda cu cele din configuratie, cu numele dintre ghilimele.*/
+        potentiometru = hardwareMap.get(AnalogInput.class,"potentiometru");
+
         motorBL = hardwareMap.get(DcMotorEx.class, "motorBL"); // Motor Back-Left
         motorBR = hardwareMap.get(DcMotorEx.class, "motorBR"); // Motor Back-Right
         motorFL = hardwareMap.get(DcMotorEx.class, "motorFL"); // Motor Front-Left
         motorFR = hardwareMap.get(DcMotorEx.class, "motorFR"); // Motor Front-Right
-        sliderL = hardwareMap.get(DcMotorEx.class,"sliderL");
-        sliderR = hardwareMap.get(DcMotorEx.class,"sliderR");
-        rotitor_sus = hardwareMap.get(DcMotorEx.class,"rotitor_sus");
-        rotitor_jos = hardwareMap.get(DcMotorEx.class,"rotitor_jos");
+
+        slider = hardwareMap.get(DcMotorEx.class,"sliderL");
+        melcsus = hardwareMap.get(DcMotorEx.class,"melcsus");
+        melcjos = hardwareMap.get(DcMotorEx.class,"melcjos");
 
         gherutaL = hardwareMap.get(Servo.class,"gherutaL");
         gherutaR = hardwareMap.get(Servo.class,"gherutaR");
@@ -55,38 +59,34 @@ public class centerstageRX extends OpMode {
 
         motorBL.setDirection(DcMotorEx.Direction.REVERSE);
         motorFL.setDirection(DcMotorEx.Direction.REVERSE);
-        sliderL.setDirection(DcMotorEx.Direction.REVERSE);
-        rotitor_sus.setDirection(DcMotorEx.Direction.REVERSE);
+        slider.setDirection(DcMotorEx.Direction.REVERSE);
+        melcsus.setDirection(DcMotorEx.Direction.REVERSE);
 
         motorBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorFL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        sliderL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        sliderR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rotitor_sus.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rotitor_jos.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        slider.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        melcsus.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        melcjos.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        rotitor_jos.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotitor_sus.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sliderL.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        sliderR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        melcjos.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        melcsus.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slider.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         motorFR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorFL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorBR.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         motorBL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
-        sliderL.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        sliderR.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rotitor_jos.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rotitor_sus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slider.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        melcjos.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        melcsus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void start(){
         Chassis.start();
         Systems.start();
-        macet.start();
     }
     /*Aici se declara thread-ul cu numele chassis, pentru ca contine partea de program care se ocupa de sasiu*/
     private final Thread Chassis = new Thread(new Runnable() {
@@ -156,23 +156,6 @@ public class centerstageRX extends OpMode {
             motorBR.setPower(ds1);
         }
     });
-    public void slidertarget(int poz, double vel, double t, int tolerance) {
-        if(rotitor_sus.getCurrentPosition() < poz){
-            rotitor_jos.setVelocity(-Math.abs(vel));
-            rotitor_sus.setVelocity(Math.abs(vel));
-        }
-        else{
-            rotitor_jos.setVelocity(Math.abs(vel));
-            rotitor_sus.setVelocity(-Math.abs(vel));
-        }
-        double lastTime = System.currentTimeMillis();
-        while (Math.abs(poz - rotitor_sus.getCurrentPosition()) > tolerance
-                && Math.abs(poz - rotitor_jos.getCurrentPosition()) > tolerance
-                && lastTime + t > System.currentTimeMillis()) {
-        }
-        rotitor_jos.setVelocity(0);
-        rotitor_sus.setVelocity(0);
-    }
     /*Aici se declara thread-ul cu numele systems, pentru ca contine partea de program care se ocupa de sisteme*/
     private final Thread Systems = new Thread(new Runnable() {
         @Override
@@ -210,8 +193,8 @@ public class centerstageRX extends OpMode {
 //                else{
 //                    plauncher.setPosition(0.35);
 //                }
-//                rotitor_jos.setPower(gamepad2.left_stick_y/slow);
-//                rotitor_sus.setPower(gamepad2.left_stick_y/slow);
+//                melcjos.setPower(gamepad2.left_stick_y/slow);
+//                melcsus.setPower(gamepad2.left_stick_y/slow);
 //                if(gamepad2.b != bl){
 //                    bval+=0.5;
 //                    if(bval>=1){
@@ -221,7 +204,7 @@ public class centerstageRX extends OpMode {
 //                }
 
                 /*if(gamepad2.x){
-                    c.target(-1300,1200,rotitor_jos,10000,10);
+                    c.target(-1300,1200,melcjos,10000,10);
                     plauncher.setPosition(0.5);
                 }*/
                 bl = gamepad2.b;
@@ -235,7 +218,7 @@ public class centerstageRX extends OpMode {
                     gherutaL.setPosition(0.38);
                     gherutaR.setPosition(0.38);
                 }
-                if(rotitor_jos.getCurrentPosition() > -400){
+                if(melcjos.getCurrentPosition() > -400){
                     gherutaR.setPosition(0.38);
                     gherutaL.setPosition(0.38);
                 }
@@ -252,23 +235,22 @@ public class centerstageRX extends OpMode {
             }
         }
     });
-    private final Thread macet = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            /*while (!stop) {
-                if(gamepad2.dpad_down && maceta.getPower() == 0){
-                    macetaPow=1;
-                }
-                else if(gamepad2.dpad_up && maceta.getPower() == 0){
-                    macetaPow=-1;
-                }
-                else if (gamepad2.right_bumper){
-                    macetaPow=0;
-                }
-                maceta.setPower(macetaPow);
-            }*/
+    
+    public void melctarget(double pot, double vel) {
+        if(potentiometru.getVoltage() < pot) {
+            melcsus.setVelocity(vel);
+            melcjos.setVelocity(vel);
+            while(potentiometru.getVoltage() < pot){}
         }
-    });
+        else{
+            melcsus.setVelocity(-vel);
+            melcjos.setVelocity(-vel);
+            while(potentiometru.getVoltage() > pot){}
+        }
+
+        melcjos.setVelocity(0);
+        melcsus.setVelocity(0);
+    }
     /*Aici se afla partea de program care arata cand programul se opreste, este foarte folositor pentru functionarea thread-urilor*/
     public void stop(){stop = true;}
 
@@ -281,10 +263,9 @@ public class centerstageRX extends OpMode {
         telemetry.addData("motorFL", motorFL.getCurrentPosition());
         telemetry.addData("motorBR", motorBR.getCurrentPosition());
         telemetry.addData("motorFR", motorFR.getCurrentPosition());
-        telemetry.addData("sliderL:", sliderL.getCurrentPosition());
-        telemetry.addData("sliderR:", sliderR.getCurrentPosition());
-        telemetry.addData("rotitor_jos:", rotitor_jos.getCurrentPosition());
-        telemetry.addData("rotitor_sus:", rotitor_sus.getCurrentPosition());
+        telemetry.addData("slider:", slider.getCurrentPosition());
+        telemetry.addData("melcjos:", melcjos.getCurrentPosition());
+        telemetry.addData("melcsus:", melcsus.getCurrentPosition());
         telemetry.addData("ghearaPoz:", ghearaPoz);
         telemetry.addData("macetaPow:", macetaPow);
         telemetry.addData("bval:", bval);
