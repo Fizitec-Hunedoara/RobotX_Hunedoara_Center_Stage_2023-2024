@@ -25,7 +25,7 @@ public class centerstageRX extends OpMode {
     public DcMotorEx motorBR,motorBL,motorFL,motorFR,slider,melcsus,melcjos;
     public Servo gherutaL,gherutaR,plauncher;
     public CRServo maceta;
-    double sm = 1, slow = 1, lb = 1, rb = 1,bval=0,xval=0;
+    double sm = 1, slow = 1, lb = 1, rb = 1,bval=0,xval=0,rt=0,rtval=0;
     boolean dpd,dpu,enter = false,bl,xl,aprins1 = false,aprins2 = false;
     double y, x, rx, ghearaPoz=0.5, macetaPow=0;
     double max = 0,lastTime;
@@ -48,7 +48,7 @@ public class centerstageRX extends OpMode {
         motorFL = hardwareMap.get(DcMotorEx.class, "motorFL"); // Motor Front-Left
         motorFR = hardwareMap.get(DcMotorEx.class, "motorFR"); // Motor Front-Right
 
-        slider = hardwareMap.get(DcMotorEx.class,"sliderL");
+        slider = hardwareMap.get(DcMotorEx.class,"slider");
         melcsus = hardwareMap.get(DcMotorEx.class,"melcsus");
         melcjos = hardwareMap.get(DcMotorEx.class,"melcjos");
 
@@ -161,55 +161,33 @@ public class centerstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-//                if(xl != gamepad2.x){
-//                    xval += 0.5;
-//                    if(xval >= 2){
-//                        xval = 0;
-//                    }
-//                }
-//                xl = gamepad2.x;
-//                if(xval==1) {
-//                    if(gamepad2.dpad_down){
-//                        maceta.setPower(1);
-//                    }
-//                    if(gamepad2.dpad_up){
-//                        maceta.setPower(-1);
-//                    }
-//                }
-//                if(xval!=1){
-//                    maceta.setPower(0)dpd = gamepad2.dpad_down;
-//                dpu = gamepad2.dpad_up;
-//                sliderL.setPower(gamepad2.right_stick_y);
-//                sliderR.setPower(gamepad2.right_stick_y);
-//                if(gamepad2.left_trigger > 0){
-//                    slow = 2;
-//                }
-//                else{
-//                    slow = 1;
-//                }
-//                if(gamepad2.right_trigger > 0){
-//                    plauncher.setPosition(0.5);
-//                }
-//                else{
-//                    plauncher.setPosition(0.35);
-//                }
-//                melcjos.setPower(gamepad2.left_stick_y/slow);
-//                melcsus.setPower(gamepad2.left_stick_y/slow);
-//                if(gamepad2.b != bl){
-//                    bval+=0.5;
-//                    if(bval>=1){
-//                        bval=0;
-//                    }
-//                };
-//                }
-
-                /*if(gamepad2.x){
-                    c.target(-1300,1200,melcjos,10000,10);
+                if (gamepad2.dpad_down) {
+                    maceta.setPower(1);
+                }
+                if (gamepad2.dpad_up) {
+                    maceta.setPower(-1);
+                }
+                if (gamepad2.left_trigger > 0) {
+                    slow = 2;
+                } else {
+                    slow = 1;
+                }
+                if (gamepad2.left_trigger > 0) {
                     plauncher.setPosition(0.5);
-                }*/
+                } else {
+                    plauncher.setPosition(0.35);
+                }
+                melcjos.setPower(gamepad2.left_stick_y / slow);
+                melcsus.setPower(gamepad2.left_stick_y / slow);
+                if (gamepad2.b != bl) {
+                    bval += 0.5;
+                    if (bval >= 1) {
+                        bval = 0;
+                    }
+                }
                 bl = gamepad2.b;
-                if(bval==0.5 && gamepad2.b) {
-                    bval+=0.0001;
+                if (bval == 0.5 && gamepad2.b) {
+                    bval += 0.0001;
                     gherutaR.setPosition(0.15);
                     gherutaL.setPosition(0.63);
                     lastTime = System.currentTimeMillis();
@@ -218,7 +196,7 @@ public class centerstageRX extends OpMode {
                     gherutaL.setPosition(0.38);
                     gherutaR.setPosition(0.38);
                 }
-                if(melcjos.getCurrentPosition() > -400){
+                if (potentiometru.getVoltage() > 1.65) {
                     gherutaR.setPosition(0.38);
                     gherutaL.setPosition(0.38);
                 }
@@ -231,6 +209,19 @@ public class centerstageRX extends OpMode {
                         gherutaR.setPosition(0.38);
                         gherutaL.setPosition(0.38);
                     }
+                }
+                slider.setPower(gamepad2.right_stick_y);
+                if (gamepad2.right_trigger != rt) {
+                    rtval += 0.5;
+                    if (rtval >= 1) {
+                        rtval = 0;
+                    }
+                }
+                rt = gamepad2.right_trigger;
+                if(rtval==0.5){
+                    rtval+=0.001;
+                    melctarget(1.94,800);
+                    c.target(1030,800,slider,2000,1);
                 }
             }
         }
