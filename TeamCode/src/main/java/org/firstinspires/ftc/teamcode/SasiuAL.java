@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@TeleOp
+//@TeleOp
 public class SasiuAL extends OpMode {
     public Switch swish;
     public DcMotorEx motorBR,motorBL,motorFL,motorFR;

@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@TeleOp
+//@TeleOp
 
 public class sistem extends OpMode {
     public Servo ghearaL,ghearaR,plauncher;

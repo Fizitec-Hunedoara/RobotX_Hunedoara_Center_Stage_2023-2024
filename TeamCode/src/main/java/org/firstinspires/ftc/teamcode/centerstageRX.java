@@ -149,12 +149,6 @@ public class centerstageRX extends OpMode {
                 POWER(pmotorFR / sm, pmotorFL / sm, pmotorBR / sm, pmotorBL / sm);
             }
         }
-        public void POWER(double df1, double sf1, double ds1, double ss1){
-            motorFR.setPower(df1);;
-            motorBL.setPower(ss1);
-            motorFL.setPower(sf1);
-            motorBR.setPower(ds1);
-        }
     });
     /*Aici se declara thread-ul cu numele systems, pentru ca contine partea de program care se ocupa de sisteme*/
     private final Thread Systems = new Thread(new Runnable() {
@@ -263,5 +257,12 @@ public class centerstageRX extends OpMode {
         telemetry.addData("xval:", xval);
         telemetry.addData("bl:", bl);
         telemetry.addData("gamepad2.b:", gamepad2.b);
+    }
+
+    public void POWER(double df1, double sf1, double ds1, double ss1){
+        motorFR.setPower(df1);;
+        motorBL.setPower(ss1);
+        motorFL.setPower(sf1);
+        motorBR.setPower(ds1);
     }
 }
