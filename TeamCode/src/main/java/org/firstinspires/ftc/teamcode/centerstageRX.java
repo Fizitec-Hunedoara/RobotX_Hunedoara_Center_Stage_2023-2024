@@ -13,11 +13,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
 public class centerstageRX extends OpMode {
@@ -37,11 +42,15 @@ public class centerstageRX extends OpMode {
     boolean stop = false, lastx = false, lasty = false, sliderState = true, aIntrat = false,aAjuns = true,aInchis = true;
     double intPoz = 0.4, servoPos = 0.0;
     AnalogInput potentiometru;
+    public DistanceSensor distanceR,distanceL;
     /*Functia de init se ruleaza numai o data, se folosete pentru initializarea motoarelor si chestii :)*/
     @Override
     public void init() {
         /* Liniile astea de cod fac ca motoarele sa corespunda cu cele din configuratie, cu numele dintre ghilimele.*/
         potentiometru = hardwareMap.get(AnalogInput.class,"potentiometru");
+
+        distanceL = hardwareMap.get(DistanceSensor.class,"distanceL");
+        distanceR = hardwareMap.get(DistanceSensor.class,"distanceR");
 
         motorBL = hardwareMap.get(DcMotorEx.class, "motorBL"); // Motor Back-Left
         motorBR = hardwareMap.get(DcMotorEx.class, "motorBR"); // Motor Back-Right
@@ -214,7 +223,7 @@ public class centerstageRX extends OpMode {
                 rt = gamepad2.right_trigger;
                 if(rtval==0.5){
                     rtval+=0.001;
-                    melctarget(1.94,800);
+                    melctarget(1.54,800);
                     c.target(1030,800,slider,2000,1);
                 }
             }
@@ -257,6 +266,10 @@ public class centerstageRX extends OpMode {
         telemetry.addData("xval:", xval);
         telemetry.addData("bl:", bl);
         telemetry.addData("gamepad2.b:", gamepad2.b);
+        telemetry.addData("potentiometru",potentiometru.getVoltage());
+        telemetry.addData("distanceL:",distanceL.getDistance(DistanceUnit.CM));
+        telemetry.addData("distanceR:",distanceR.getDistance(DistanceUnit.CM));
+        telemetry.update();
     }
 
     public void POWER(double df1, double sf1, double ds1, double ss1){
