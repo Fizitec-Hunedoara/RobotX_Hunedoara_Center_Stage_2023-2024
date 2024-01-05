@@ -112,14 +112,14 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         c.kdf(300);
         c.target(-100,1300,c.getSlider(),3000,10);
         c.deschidere();
-        c.kdf(3000);
+        c.kdf(500);
         c.melctarget(2.4,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,-10))
+                .lineTo(new Vector2d(47,-60))
                 .build();
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,-10))
+                .lineTo(new Vector2d(62,-60))
                 .build();
         drive.followTrajectorySequence(ts);
         //c.melctarget(0.8,1300,3000);

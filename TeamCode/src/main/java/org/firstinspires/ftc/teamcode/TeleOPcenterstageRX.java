@@ -103,7 +103,8 @@ public class TeleOPcenterstageRX extends OpMode {
         public void run() {
             while (!stop) {
                 Log.wtf("AvionSiAGC","check");
-                if (gamepad2.left_trigger > 0) {
+                if (gamepad2.dpad_up && gamepad2.left_trigger > 0) {
+                    lastTime = System.currentTimeMillis();
                     c.setPlauncherPosition(0.5);
                     aLansat = true;
                 }
@@ -111,7 +112,7 @@ public class TeleOPcenterstageRX extends OpMode {
                     c.setPlauncherPosition(0.35);
                 }
                 Log.wtf("AvionSiAGC","check1");
-                if (gamepad2.x) {
+                /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }
                 else if (!aLansat) {
@@ -132,7 +133,7 @@ public class TeleOPcenterstageRX extends OpMode {
                         c.setExtensorPower(-1, 3000);
                         aRetras = true;
                     }
-                }
+                }*/
                 Log.wtf("AvionSiAGC","check2");
             }
         }

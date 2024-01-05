@@ -54,7 +54,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                 telemetry.addData("height / width:", hperw);
                 x = pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width/2.0;
                 telemetry.addData("x:",pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width/2);
-                if(x==0){
+                if(x < 50 || rectx * recty < 100){
                     varrez = 3;
                 }
                 else if (x > 250 && x < 600) {
@@ -113,14 +113,14 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         c.kdf(200);
         c.target(-100,1300,c.getSlider(),3000,10);
         c.deschidere();
-        c.kdf(3000);
+        c.kdf(500);
         c.melctarget(2.4,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,10))
+                .lineTo(new Vector2d(47,60))
                 .build();
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,-10))
+                .lineTo(new Vector2d(62,60))
                 .build();
         drive.followTrajectorySequence(ts);
     }
