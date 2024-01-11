@@ -101,8 +101,8 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(-53, -36))
-                    .lineToLinearHeading(new Pose2d(-53.,-6,Math.toRadians(180)))
+                    .lineTo(new Vector2d(-55, -36))
+                    .lineToLinearHeading(new Pose2d(-55,-6,Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 1){
@@ -135,7 +135,7 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
         c.kdf(200);
         c.target(-100,1300,c.getSlider(),5000,10);
         c.deschidere();
-        c.kdf(3000);
+        c.kdf(500);
         c.melctarget(2.4,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47,-10))

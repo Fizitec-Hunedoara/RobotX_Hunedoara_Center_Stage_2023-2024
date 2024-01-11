@@ -108,19 +108,19 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.melctarget(0.82,1300,3000);
+        c.melctarget(0.8,1300,3000);
         c.target(-800,1300,c.getSlider(),3000,10);
         c.kdf(200);
         c.target(-100,1300,c.getSlider(),3000,10);
         c.deschidere();
-        c.kdf(3000);
+        c.kdf(500);
         c.melctarget(2.4,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47,10))
                 .build();
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,-10))
+                .lineTo(new Vector2d(62,10))
                 .build();
         drive.followTrajectorySequence(ts);
     }

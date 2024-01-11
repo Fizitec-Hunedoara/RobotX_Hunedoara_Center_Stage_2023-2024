@@ -103,7 +103,8 @@ public class TeleOPcenterstageRX extends OpMode {
         public void run() {
             while (!stop) {
                 Log.wtf("AvionSiAGC","check");
-                if (gamepad2.left_trigger > 0) {
+                if (gamepad2.dpad_up && gamepad2.left_trigger > 0) {
+                    lastTime = System.currentTimeMillis();
                     c.setPlauncherPosition(0.5);
                     aLansat = true;
                 }
@@ -111,7 +112,7 @@ public class TeleOPcenterstageRX extends OpMode {
                     c.setPlauncherPosition(0.35);
                 }
                 Log.wtf("AvionSiAGC","check1");
-                if (gamepad2.x) {
+                /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }
                 else if (!aLansat) {
@@ -132,7 +133,7 @@ public class TeleOPcenterstageRX extends OpMode {
                         c.setExtensorPower(-1, 3000);
                         aRetras = true;
                     }
-                }
+                }*/
                 Log.wtf("AvionSiAGC","check2");
             }
         }
@@ -175,6 +176,20 @@ public class TeleOPcenterstageRX extends OpMode {
                 }
                 else if (gamepad2.y) {
                     c.inchidere();
+                }
+                if ((gamepad2.right_trigger > 0.1) && gamepad2.dpad_up){
+                    if (c.getPotentiometruVoltage() > 1.601){
+                        while (c.getPotentiometruVoltage() > 1.598){
+                            c.setMelcPower(0.5);
+                        }
+                    }
+                    else if (c.getPotentiometruVoltage() < 1.581) {
+                        while (c.getPotentiometruVoltage() < 1.598){
+                            c.setMelcPower(-0.5);
+                        }
+                    }
+
+
                 }
             }
         }
