@@ -6,24 +6,18 @@ import static java.lang.Math.abs;
 import static java.lang.Math.addExact;
 import static java.lang.Math.floorDiv;
 
-import android.util.Log;
 import android.widget.Switch;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 @TeleOp
-public class SasiuAL extends OpMode {
+public class SasiuTeleOP extends OpMode {
     public Switch swish;
     public DcMotorEx motorBR,motorBL,motorFL,motorFR;
     double sm = 1, slow = 1, lb = 1, rb = 1;
-
     double y, x, rx, ghearaPoz=0.5, macetaPow=0;
     double max = 0;
     double pmotorBL;
@@ -33,6 +27,7 @@ public class SasiuAL extends OpMode {
 
     boolean stop = false, lastx = false, lasty = false, sliderState = true, aIntrat = false,aAjuns = true,aInchis = true;
     double intPoz = 0.4, servoPos = 0.0;
+    public Servo avionas;
     /*Functia de init se ruleaza numai o data, se folosete pentru initializarea motoarelor si chestii :)*/
     @Override
     public void init() {
@@ -42,8 +37,9 @@ public class SasiuAL extends OpMode {
         motorFL = hardwareMap.get(DcMotorEx.class, "motorFL"); // Motor Back-Left
         motorFR = hardwareMap.get(DcMotorEx.class, "motorFR"); // Motor Back-Left
 
-        motorBL.setDirection(DcMotorEx.Direction.REVERSE);
-        motorFL.setDirection(DcMotorEx.Direction.REVERSE);
+
+        motorBR.setDirection(DcMotorEx.Direction.REVERSE);
+        motorFR.setDirection(DcMotorEx.Direction.REVERSE);
 
         motorBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         motorBR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -54,6 +50,8 @@ public class SasiuAL extends OpMode {
         motorFL.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorBR.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorBL.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
 
         motorFR.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -77,10 +75,10 @@ public class SasiuAL extends OpMode {
                 rx = gamepad1.right_stick_x;
 
                 /* Liniile astea de cod iau niste variabile care reprezinta puterea fiecarui motor, cu ajutorul puterilor de la controller*/
-                pmotorFL = y  + rx;
-                pmotorBL = y  + rx;
-                pmotorBR = y  - rx;
-                pmotorFR = y  - rx;
+                pmotorFL = y + x  + rx;
+                pmotorBL = y - x + rx;
+                pmotorBR = y + x - rx;
+                pmotorFR = y - x - rx;
 
                 /*Secventele urmatoare de cod stabilesc maximul dintre modulele puterilor motoarelor cu un anumit scop...*/
                 max = abs(pmotorFL);
