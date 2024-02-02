@@ -17,10 +17,10 @@ public class MeepMeepTesting {
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-38.5118110236, 62.73622, Math.toRadians(270)))
-                                .lineTo(new Vector2d(-38,34))
-                                .lineTo(new Vector2d(-53, 36))
-                                .lineToLinearHeading(new Pose2d(-53,6,Math.toRadians(180)))
+                        drive.trajectorySequenceBuilder(new Pose2d(14.783464, -62.73622, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
+                                .lineToLinearHeading(new Pose2d(new Vector2d(16,-34),Math.toRadians(160)))
+                                .splineToLinearHeading(new Pose2d(new Vector2d(53, -28),Math.toRadians(180)),Math.toRadians(0))
                                 .build()
                 );
 

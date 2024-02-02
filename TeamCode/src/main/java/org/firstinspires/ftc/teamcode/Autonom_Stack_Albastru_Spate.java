@@ -16,9 +16,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
-public class Autonom_Albastru_De_Balta extends LinearOpMode {
+public class Autonom_Stack_Albastru_Spate extends LinearOpMode {
     double rectx, recty, hperw,x;
-    boolean outOfThread = false;
     int varrez = 2;
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
@@ -26,7 +25,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
-        CV_detectionType = Var_Blue.DetectionTypes.NIGHT;
+        CV_detectionType = Var_Blue.DetectionTypes.DAY;
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
@@ -54,19 +53,16 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                 telemetry.addData("rectangle height:", recty);
                 telemetry.addData("height / width:", hperw);
                 x = pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width/2.0;
-                telemetry.addData("x:",pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width/2);
-                if(x==0){
-                    varrez = 3;
-                }
-                else if (x > 250 && x < 600) {
+                if (x < 350 && x > 100) {
                     varrez = 2;
                 }
-                else if(x < 250){
-                    varrez = 1;
-                }
-                else{
+                else if(x > 350){
                     varrez = 3;
                 }
+                else{
+                    varrez = 1;
+                }
+                telemetry.addData("x:",pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width/2);
                 telemetry.addData("caz:", varrez);
             }
             catch (Exception E) {
@@ -77,88 +73,32 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
             telemetry.update();
         }
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-38.5118110236, 62.73622, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(new Vector2d(16, 37),Math.toRadians(315)))
+                .lineToLinearHeading(new Pose2d(-39,40,Math.toRadians(225)))
                 .build();
-        if(varrez == 2){
+        //if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(14, 33))
+                    .lineTo(new Vector2d(-38,34))
                     .build();
-        }
-        else if(varrez == 3){
+        /*}
+        else if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(15,48),Math.toRadians(230)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10,34),Math.toRadians(200)))
+                    .lineToLinearHeading(new Pose2d(-38,40,Math.toRadians(310)))
+                    .lineToLinearHeading(new Pose2d(-32,32,Math.toRadians(340)))
                     .build();
-        }
-        drive.followTrajectorySequence(ts);
-        Pus_pe_tabla.start();
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, 29),Math.toRadians(180)))
-                .build();
-        if(varrez == 1){
-            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16,48),Math.toRadians(270)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 40),Math.toRadians(180)))
-                    .build();
-        }
-        else if(varrez == 2){
-            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52,34),Math.toRadians(180)))
-                    .build();
-        }
-        drive.followTrajectorySequence(ts);
-        c.kdf(100);
-        if(varrez == 2){
-            c.kdf(1000);
-        }
-        else if(varrez == 3){
-            c.kdf(1000);
-        }
-        c.deschidere();
-        c.kdf(500);
-        Brat_stop.start();
-        if(varrez == 3){
-            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(47,29))
-                    .build();
-            drive.followTrajectorySequence(ts);
-        }
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,10))
-                .build();
+        }*/
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,10))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-43, 38),Math.toRadians(177)))
                 .build();
         drive.followTrajectorySequence(ts);
+        c.target(-500,2000,c.getSlider(),3000,20);
+        c.melctargetencoder(-1165,1000,10000,20);
+        c.setMacetaPower(-1);
+        c.target(-1700,2000,c.getSlider(),3000,20);
+        c.kdf(3000);
+
     }
-    private final Thread Pus_pe_tabla = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            outOfThread = false;
-            c.melctarget(4200,1300,3000);
-            c.target(-800,1300,c.getSlider(),3000,10);
-            c.kdf(200);
-            c.target(-300,1300,c.getSlider(),3000,10);
-            c.kdf(500);
-            outOfThread = true;
-        }
-    });
-    private final Thread Brat_jos = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            c.kdf(500);
-            c.melctarget(0.0,1300,3000);
-        }
-    });
-    private final Thread Brat_stop = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            c.kdf(500);
-            c.melctarget(-1200,1300,3000);
-        }
-    });
 }

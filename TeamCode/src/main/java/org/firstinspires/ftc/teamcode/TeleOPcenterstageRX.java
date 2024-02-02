@@ -43,7 +43,6 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-                Log.wtf("Chassis", "check");
                 y = gamepad1.left_stick_y;
                 x = gamepad1.left_stick_x;
                 rx = gamepad1.right_stick_x;
@@ -102,7 +101,6 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-                Log.wtf("AvionSiAGC","check");
                 if (gamepad2.dpad_up && gamepad2.left_trigger > 0) {
                     lastTime = System.currentTimeMillis();
                     c.setPlauncherPosition(0.5);
@@ -111,16 +109,16 @@ public class TeleOPcenterstageRX extends OpMode {
                 else {
                     c.setPlauncherPosition(0.35);
                 }
-                Log.wtf("AvionSiAGC","check1");
+
                 /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }
                 else if (!aLansat) {
-                    if (!notEntered && c.getPotentiometruVoltage() > 1.7) {
+                    if (!notEntered && c.getEncoderBrat() > 1.7) {
                         c.setExtensorPower(-1, 3000);
                         notEntered = true;
                     }
-                    else if (c.getPotentiometruVoltage() > 1.7) {
+                    else if (c.getEncoderBrat() > 1.7) {
                         c.setExtensorPower(gamepad2.left_stick_x, 1);
                     }
                     else if (notEntered) {
@@ -134,7 +132,6 @@ public class TeleOPcenterstageRX extends OpMode {
                         aRetras = true;
                     }
                 }*/
-                Log.wtf("AvionSiAGC","check2");
             }
         }
     });
@@ -142,33 +139,41 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-                Log.wtf("systems","check");
                 c.setSliderPower(gamepad2.right_stick_y);
-                c.setMelcPower(gamepad2.left_stick_y);
+                if(gamepad2.dpad_left){
+                    c.melctarget(0,1300,10000);
+                }
+                else {
+                    if(c.getEncoderBrat() < 4250 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
+                        c.setMelcPower(gamepad2.left_stick_y);
+                    }
+                    else{
+                        c.setMelcPower(0);
+                    }
+                }
                 if (gamepad2.left_bumper) {
                     c.setMacetaPower(1.0);
                 }
                 if (gamepad2.right_bumper) {
                     c.setMacetaPower(-1.0);
                 }
-
-                Log.wtf("systems","check1");
-                if (c.getPotentiometruVoltage() > 1.7 && !aInchis) {
+                if (c.getEncoderBrat() > 1700 && !aInchis) {
                     aInchis=true;
                     c.inchidere();
                 }
-                else if(c.getPotentiometruVoltage() < 1.7){
+                else if(c.getEncoderBrat() < 1700){
                     aInchis = false;
                 }
-                Log.wtf("systems","check2");
                 if (gamepad2.b != bl && !aIntrat) {
                     aIntrat = true;
+                    Log.wtf("systems","check2");
+                    lastTime = System.currentTimeMillis();
                     if (gamepad2.b) {
-                        new Thread(() -> c.letPixelDrop(100)).start();
+                        new Thread(() -> c.letPixelDrop(100)).run();
                     }
                     bl = false;
                 }
-                else if(gamepad2.b == bl){
+                else if(gamepad2.b == bl && lastTime + 1000 < System.currentTimeMillis()){
                     aIntrat = false;
                 }
                 if (gamepad2.a && !aIntrat) {
@@ -178,13 +183,13 @@ public class TeleOPcenterstageRX extends OpMode {
                     c.inchidere();
                 }
                 if ((gamepad2.right_trigger > 0.1) && gamepad2.dpad_up){
-                    if (c.getPotentiometruVoltage() > 1.601){
-                        while (c.getPotentiometruVoltage() > 1.598){
+                    if (c.getEncoderBrat() > 1601){
+                        while (c.getEncoderBrat() > 1598){
                             c.setMelcPower(0.5);
                         }
                     }
-                    else if (c.getPotentiometruVoltage() < 1.581) {
-                        while (c.getPotentiometruVoltage() < 1.598){
+                    else if (c.getEncoderBrat() < 1581) {
+                        while (c.getEncoderBrat() < 1598){
                             c.setMelcPower(-0.5);
                         }
                     }
@@ -207,14 +212,14 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("motorBR", c.getMotorBRPower());
         telemetry.addData("motorFR", c.getMotorFRPower());
         telemetry.addData("slider:", c.getSliderPower());
-        telemetry.addData("melcjos:", c.getMelcjosPower());
+        telemetry.addData("melcjos:", c.getMelcJosPosition());
         telemetry.addData("melcsus:", c.getMelcsusPower());
         telemetry.addData("macetaPow:", c.getMacetaPower());
         telemetry.addData("bval:", bval);
         telemetry.addData("bl:", bl);
         telemetry.addData("sm", sm);
         telemetry.addData("gamepad2.b:", gamepad2.b);
-        telemetry.addData("potentiometru:", c.getPotentiometruVoltage());
+        telemetry.addData("pozitiebrat:", c.getEncoderBrat());
         telemetry.addData("distanceL:", c.getDistanceL(DistanceUnit.CM));
         telemetry.addData("distanceR:", c.getDistanceR(DistanceUnit.CM));
         telemetry.addData("ghearaL:",c.getGhearaLPosition());

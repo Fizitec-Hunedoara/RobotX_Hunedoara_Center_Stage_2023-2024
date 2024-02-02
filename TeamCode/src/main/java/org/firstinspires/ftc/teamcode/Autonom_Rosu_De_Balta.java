@@ -21,6 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class Autonom_Rosu_De_Balta extends LinearOpMode {
     double rectx, recty, hperw,x;
+    boolean outOfThread = false;
     int varrez = 2;
     public OpenCvCamera webcam;
     public PachetelNouRosu pipelineRosu = new PachetelNouRosu();
@@ -87,41 +88,77 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         }
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(15,-48))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16,-34),Math.toRadians(160)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(10,-34),Math.toRadians(160)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
+        Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .splineToLinearHeading(new Pose2d(new Vector2d(53,-28),Math.toRadians(180)),Math.toRadians(0))
+                .lineToLinearHeading(new Pose2d(new Vector2d(52,-29),Math.toRadians(180)))
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-35),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52,-34),Math.toRadians(180)))
                     .build();
         }
         if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16,-48),Math.toRadians(90)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-41),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52,-40),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.melctarget(0.82,1300,3000);
-        c.target(-800,1300,c.getSlider(),3000,10);
-        c.kdf(300);
-        c.target(-100,1300,c.getSlider(),3000,10);
+        c.kdf(100);
+        if(varrez == 2){
+            c.kdf(1000);
+        }
+        else if(varrez == 1){
+            c.kdf(2000);
+        }
         c.deschidere();
         c.kdf(500);
-        c.melctarget(2.4,1300,3000);
+        Brat_stop.start();
+        if(varrez == 1){
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineTo(new Vector2d(47,-29))
+                    .build();
+            drive.followTrajectorySequence(ts);
+        }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,-60))
+                .lineTo(new Vector2d(47,-10))
                 .build();
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,-60))
+                .lineTo(new Vector2d(62,-10))
                 .build();
         drive.followTrajectorySequence(ts);
         //c.melctarget(0.8,1300,3000);
     }
+    private final Thread Pus_pe_tabla = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            outOfThread = false;
+            c.melctarget(4200,1300,3000);
+            c.target(-800,1300,c.getSlider(),3000,10);
+            c.kdf(200);
+            c.target(-300,1300,c.getSlider(),3000,10);
+            c.kdf(500);
+            outOfThread = true;
+        }
+    });
+    private final Thread Brat_stop = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            c.kdf(500);
+            c.melctarget(-1200,1300,3000);
+        }
+    });
+    private final Thread Brat_jos = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            c.kdf(500);
+            c.melctarget(0.0,1300,3000);
+        }
+    });
 }

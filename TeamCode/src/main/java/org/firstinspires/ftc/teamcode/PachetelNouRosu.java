@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_x1;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_x2;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_y1;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_y2;
+import static org.firstinspires.ftc.teamcode.Var_Red.n;
 import static org.opencv.core.CvType.CV_8UC1;
 
 import org.opencv.core.Core;
@@ -89,10 +90,14 @@ public class PachetelNouRosu extends OpenCvPipeline {
 
             //aceasta parte reduce partile neregulate din imagine
             //erode micsoreaza pixelii, dilate mareste pixelii
-            Imgproc.erode(input, input, element);
-            Imgproc.dilate(input, input, element);
-            Imgproc.dilate(input, input, element);
-            Imgproc.erode(input, input, element);
+            int i;
+            for(i=1;i<=n;i++) {
+                Imgproc.erode(input, input, element);
+            }
+            for(i=1;i<=n+1;i++) {
+                Imgproc.dilate(input, input, element);
+            }
+
 
             rect = new Mat(input.rows(), input.cols(), input.type(), Scalar.all(0));
             //face un dreptunghi care stabileste zona de detectare

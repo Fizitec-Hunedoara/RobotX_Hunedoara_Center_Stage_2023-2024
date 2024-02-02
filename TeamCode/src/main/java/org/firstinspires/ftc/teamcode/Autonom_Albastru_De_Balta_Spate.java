@@ -107,31 +107,31 @@ public class Autonom_Albastru_De_Balta_Spate extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.melctarget(2.4,3000,2000);
+        c.melctarget(-1200,3000,2000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(20,6))
-                .lineTo(new Vector2d(53,38))
+                .lineTo(new Vector2d(53,40))
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(20,6))
-                    .lineTo(new Vector2d(53,34))
+                    .lineTo(new Vector2d(53,36))
                     .build();
         }
         if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(20,6))
-                    .lineTo(new Vector2d(53,31))
+                    .lineTo(new Vector2d(53,32))
                     .build();   
         }
         drive.followTrajectorySequence(ts);
-        c.melctarget(0.8,3000,4000);
+        c.melctarget(4200,3000,4000);
         c.target(-800,1300,c.getSlider(),3000,10);
         c.kdf(200);
-        c.target(-100,1300,c.getSlider(),5000,10);
+        c.target(-300,1300,c.getSlider(),5000,10);
         c.deschidere();
         c.kdf(500);
-        c.melctarget(2.4,3000,3000);
+        c.melctarget(-1200,3000,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47,10))
                 .build();

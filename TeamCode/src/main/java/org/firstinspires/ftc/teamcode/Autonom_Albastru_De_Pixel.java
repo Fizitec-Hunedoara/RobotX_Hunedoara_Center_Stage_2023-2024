@@ -16,10 +16,10 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
-public class Autonom_Albastru_De_Balta extends LinearOpMode {
+public class Autonom_Albastru_De_Pixel extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
-    int varrez = 2;
+    int varrez = 2,poz2=100;
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
     public ChestiiDeAutonom c = new ChestiiDeAutonom();
@@ -43,7 +43,6 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         });
         telemetry.addLine("waiting for start:");
         telemetry.update();
-
         FtcDashboard.getInstance().startCameraStream(webcam, 60);
         while (!isStopRequested() && !isStarted()) {
             try {
@@ -96,7 +95,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, 29),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(52, 28),Math.toRadians(180)))
                 .build();
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -110,30 +109,54 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
+//        c.melctarget(0.8,1300,3000);
+//        c.target(-800,1300,c.getSlider(),3000,10);
+//        c.kdf(200);
+//        c.target(-100,1300,c.getSlider(),3000,10);
+
         c.kdf(100);
         if(varrez == 2){
             c.kdf(1000);
         }
         else if(varrez == 3){
-            c.kdf(1000);
+            c.kdf(1300);
         }
         c.deschidere();
-        c.kdf(500);
-        Brat_stop.start();
-        if(varrez == 3){
+        c.kdf(600);
+        AGC_extins.start();
+        Brat_jos.start();
+        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineToLinearHeading(new Pose2d(new Vector2d(30,11),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-43,11),Math.toRadians(180)))
+                .build();
+        drive.followTrajectorySequence(ts);
+        AGC_retras.start();
+        c.inchidere();
+        c.pixel_retreat();
+        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineTo(new Vector2d(30,11))
+                .build();
+        drive.followTrajectorySequence(ts);
+        Pus_pe_tabla.start();
+        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineTo(new Vector2d(53,34))
+                .build();
+        if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(47,29))
+                    .lineTo(new Vector2d(53,28))
                     .build();
-            drive.followTrajectorySequence(ts);
         }
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,10))
-                .build();
+        if(varrez == 1){
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineTo(new Vector2d(53,39))
+                    .build();
+        }
         drive.followTrajectorySequence(ts);
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,10))
-                .build();
-        drive.followTrajectorySequence(ts);
+        c.kdf(2300);
+
+        c.deschidere();
+        c.kdf(500);
+        c.melctarget(-900,3000,3000);
     }
     private final Thread Pus_pe_tabla = new Thread(new Runnable() {
         @Override
@@ -141,7 +164,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
             outOfThread = false;
             c.melctarget(4200,1300,3000);
             c.target(-800,1300,c.getSlider(),3000,10);
-            c.kdf(200);
+            c.kdf(300);
             c.target(-300,1300,c.getSlider(),3000,10);
             c.kdf(500);
             outOfThread = true;
@@ -151,14 +174,19 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         @Override
         public void run() {
             c.kdf(500);
-            c.melctarget(0.0,1300,3000);
+            c.melctarget(-1800,1300,3000);
         }
     });
-    private final Thread Brat_stop = new Thread(new Runnable() {
+    private final Thread AGC_extins = new Thread(new Runnable() {
         @Override
         public void run() {
-            c.kdf(500);
-            c.melctarget(-1200,1300,3000);
+            c.setExtensorPower(1,1300);
+        }
+    });
+    private final Thread AGC_retras = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            c.setExtensorPower(-1,1300);
         }
     });
 }

@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.util.LogFiles.log;
 import static java.lang.Math.abs;
+
+import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -16,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -35,7 +39,7 @@ public class ChestiiDeAutonom{
     private DistanceSensor distanceL, distanceR;
     private boolean sasiuInited;
     private boolean isStopRequested = false;
-
+    private Encoder encoderbrat;
     public void init(HardwareMap hard){
         this.init(hard, null, false);
     }
@@ -49,7 +53,7 @@ public class ChestiiDeAutonom{
         }
         sasiuInited = shouldInitSasiu;
 
-        potentiometru = hard.get(AnalogInput.class, "potentiometru");
+        encoderbrat = new Encoder(hard.get(DcMotorEx.class, "motorBR"));
         distanceL = hard.get(DistanceSensor.class, "distanceL");
         distanceR = hard.get(DistanceSensor.class, "distanceR");
 
@@ -248,8 +252,8 @@ public class ChestiiDeAutonom{
         return maceta.getPower();
     }
 
-    public double getPotentiometruVoltage() {
-        return potentiometru.getVoltage();
+    public double getEncoderBrat() {
+        return encoderbrat.getCurrentPosition();
     }
 
     public double getDistanceL(DistanceUnit distanceUnit) {
@@ -263,18 +267,16 @@ public class ChestiiDeAutonom{
     public DcMotorEx getSlider() {
         return slider;
     }
-
+    public int getMelcJosPosition(){return melcjos.getCurrentPosition();}
     public void setIsStopRequested(boolean value){
         isStopRequested = value;
     }
 
     public void setExtensorPower(double pow, int t) {
-        extensorR.setPower(pow);
-        extensorL.setPower(pow);
-        try {
-            Thread.sleep(t);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        long lastTime = System.currentTimeMillis();
+        while(lastTime + t > System.currentTimeMillis()) {
+            extensorR.setPower(pow);
+            extensorL.setPower(pow);
         }
         extensorL.setPower(0);
         extensorR.setPower(0);
@@ -283,10 +285,6 @@ public class ChestiiDeAutonom{
     public synchronized void setMelcPower(double melcPower) {
         melcsus.setPower(melcPower);
         melcjos.setPower(melcPower);
-    }
-
-    public boolean isRobotFolded() {
-        return getPotentiometruVoltage() > 1.7;
     }
 
     public void setSliderPower(double sliderPower) {
@@ -307,28 +305,77 @@ public class ChestiiDeAutonom{
         deschidere();
         try {
             Thread.sleep(delay);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
         inchidere();
     }
 
-    public void melctarget(double pot, double vel, double t) {
+    public void melctarget(double poz, double vel, double t) {
         double lastTime = System.currentTimeMillis();
-        if (potentiometru.getVoltage() > pot) {
-            melcsus.setVelocity(vel);
-            melcjos.setVelocity(vel);
-            while (potentiometru.getVoltage() > pot && lastTime + t > System.currentTimeMillis()) {
+        if (encoderbrat.getCurrentPosition() > poz) {
+            melcsus.setVelocity(-vel);
+            melcjos.setVelocity(-vel);
+            while (encoderbrat.getCurrentPosition() > poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         else {
-            melcsus.setVelocity(-vel);
-            melcjos.setVelocity(-vel);
-            while (potentiometru.getVoltage() < pot && lastTime + t > System.currentTimeMillis()) {
+            melcsus.setVelocity(vel);
+            melcjos.setVelocity(vel);
+            while (encoderbrat.getCurrentPosition() < poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         melcjos.setVelocity(0);
         melcsus.setVelocity(0);
+    }
+    public void melctargettolerance(double poz, double vel, double t, double tolerance) {
+        double lastTime = System.currentTimeMillis();
+        if (encoderbrat.getCurrentPosition() > poz) {
+            melcsus.setVelocity(-vel);
+            melcjos.setVelocity(-vel);
+            while (encoderbrat.getCurrentPosition() > poz + tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        else {
+            melcsus.setVelocity(vel);
+            melcjos.setVelocity(vel);
+            while (encoderbrat.getCurrentPosition() < poz - tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        melcjos.setVelocity(0);
+        melcsus.setVelocity(0);
+    }
+    public void melctargetencoder(double poz, double vel, double t, double tolerance){
+        if (melcjos.getCurrentPosition() < poz) {
+            melcjos.setVelocity(vel);
+            melcsus.setVelocity(vel);
+        }
+        else {
+            melcjos.setVelocity(-vel);
+            melcsus.setVelocity(-vel);
+        }
+        double lastTime = System.currentTimeMillis();
+        while (!isStopRequested
+                && lastTime + t > System.currentTimeMillis()
+                && (abs(melcjos.getCurrentPosition() - poz) > tolerance)) {
+            Log.wtf("pozitie:",Integer.toString(melcjos.getCurrentPosition()));}
+        melcsus.setVelocity(0);
+        melcjos.setVelocity(0);
+    }
+    public void pixel_retreat(){
+        melctarget(-1500,1500,10000);
+        target(-500,2000,getSlider(),3000,20);
+        melctarget(-1670,1000,10000);
+        setMacetaPower(-1);
+        kdf(300);
+        target(-1650,2000,getSlider(),3000,20);
+        kdf(400);
+        target(-1550,2000,getSlider(),3000,20);
+        melctarget(-1740,1000,10000);
+        target(-1650,2000,getSlider(),3000,20);
+        kdf(600);
+        setMacetaPower(-1);
     }
 
     public synchronized void setPlauncherPosition(double position) {
