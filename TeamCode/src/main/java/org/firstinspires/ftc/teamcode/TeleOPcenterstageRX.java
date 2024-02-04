@@ -140,11 +140,11 @@ public class TeleOPcenterstageRX extends OpMode {
         public void run() {
             while (!stop) {
                 c.setSliderPower(gamepad2.right_stick_y);
-                if(gamepad2.dpad_left){
-                    c.melctarget(0,1300,10000);
+                if(gamepad2.dpad_up && gamepad2.right_trigger > 0){
+                    c.melctarget(520,1300,10000);
                 }
                 else {
-                    if(c.getEncoderBrat() < 4250 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
+                    if(c.getEncoderBrat() < 4400 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
                         c.setMelcPower(gamepad2.left_stick_y);
                     }
                     else{
@@ -181,20 +181,6 @@ public class TeleOPcenterstageRX extends OpMode {
                 }
                 else if (gamepad2.y) {
                     c.inchidere();
-                }
-                if ((gamepad2.right_trigger > 0.1) && gamepad2.dpad_up){
-                    if (c.getEncoderBrat() > 1601){
-                        while (c.getEncoderBrat() > 1598){
-                            c.setMelcPower(0.5);
-                        }
-                    }
-                    else if (c.getEncoderBrat() < 1581) {
-                        while (c.getEncoderBrat() < 1598){
-                            c.setMelcPower(-0.5);
-                        }
-                    }
-
-
                 }
             }
         }

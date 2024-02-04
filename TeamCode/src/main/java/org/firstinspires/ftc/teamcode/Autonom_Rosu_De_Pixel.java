@@ -94,17 +94,17 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(52, -29),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, -29),Math.toRadians(180)))
                 .build();
         if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16,-48),Math.toRadians(90)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52,-41),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-41),Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52,-34),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-34),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
@@ -137,16 +137,16 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(53,-34))
+                .lineTo(new Vector2d(52.5,-34))
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(53,-30))
+                    .lineTo(new Vector2d(52.5,-30))
                     .build();
         }
         else if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(53,-41))
+                    .lineTo(new Vector2d(52.5,-41))
                     .build();
         }
         drive.followTrajectorySequence(ts);

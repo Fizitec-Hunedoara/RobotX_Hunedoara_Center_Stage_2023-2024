@@ -364,18 +364,20 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
     }
     public void pixel_retreat(){
-        melctarget(-1500,1500,10000);
-        target(-500,2000,getSlider(),3000,20);
-        melctarget(-1670,1000,10000);
-        setMacetaPower(-1);
-        kdf(300);
-        target(-1650,2000,getSlider(),3000,20);
-        kdf(400);
-        target(-1550,2000,getSlider(),3000,20);
-        melctarget(-1740,1000,10000);
-        target(-1650,2000,getSlider(),3000,20);
-        kdf(600);
-        setMacetaPower(-1);
+        if(!isStopRequested) {
+            melctarget(-1500, 1500, 10000);
+            target(-500, 2000, getSlider(), 3000, 20);
+            melctargetencoder(-1020, 1000, 10000, 20);
+            setMacetaPower(-1);
+            kdf(300);
+            target(-1650, 2000, getSlider(), 3000, 20);
+            kdf(400);
+            target(-1550, 2000, getSlider(), 3000, 20);
+            melctargetencoder(-1070, 1000, 10000, 20);
+            target(-1650, 2000, getSlider(), 3000, 20);
+            kdf(600);
+            setMacetaPower(-1);
+        }
     }
 
     public synchronized void setPlauncherPosition(double position) {
