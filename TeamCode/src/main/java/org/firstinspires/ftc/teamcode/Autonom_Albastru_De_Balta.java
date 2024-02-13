@@ -80,7 +80,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(new Vector2d(16, 37),Math.toRadians(315)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(15, 37),Math.toRadians(315)))
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
@@ -127,11 +127,11 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
             drive.followTrajectorySequence(ts);
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47,10))
+                .lineTo(new Vector2d(47,60))
                 .build();
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(62,10))
+                .lineTo(new Vector2d(62,60))
                 .build();
         drive.followTrajectorySequence(ts);
     }
@@ -139,7 +139,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         @Override
         public void run() {
             outOfThread = false;
-            c.melctarget(4200,1300,3000);
+            c.melctarget(0.85,1300,3000);
             c.target(-800,1300,c.getSlider(),3000,10);
             c.kdf(200);
             c.target(-300,1300,c.getSlider(),3000,10);
@@ -151,14 +151,14 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         @Override
         public void run() {
             c.kdf(500);
-            c.melctarget(0.0,1300,3000);
+            c.melctarget(2.3,1300,3000);
         }
     });
     private final Thread Brat_stop = new Thread(new Runnable() {
         @Override
         public void run() {
             c.kdf(500);
-            c.melctarget(-1200,1300,3000);
+            c.melctarget(2.3,1300,3000);
         }
     });
 }

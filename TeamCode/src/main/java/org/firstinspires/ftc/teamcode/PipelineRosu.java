@@ -18,8 +18,14 @@ import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_x1;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_x2;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_y1;
 import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_y2;
-import static org.firstinspires.ftc.teamcode.Var_Red.n;
+import static org.opencv.core.CvType.CV_8U;
 import static org.opencv.core.CvType.CV_8UC1;
+
+import android.provider.ContactsContract;
+import android.util.Log;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -36,7 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class PachetelNouRosu extends OpenCvPipeline {
+public class PipelineRosu extends OpenCvPipeline {
     //stabileste forma detectorului(dreptunghi)
     private final int elementType = Imgproc.CV_SHAPE_RECT;
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
@@ -90,14 +96,10 @@ public class PachetelNouRosu extends OpenCvPipeline {
 
             //aceasta parte reduce partile neregulate din imagine
             //erode micsoreaza pixelii, dilate mareste pixelii
-            int i;
-            for(i=1;i<=n;i++) {
-                Imgproc.erode(input, input, element);
-            }
-            for(i=1;i<=n+1;i++) {
-                Imgproc.dilate(input, input, element);
-            }
-
+            Imgproc.erode(input, input, element);
+            Imgproc.dilate(input, input, element);
+            Imgproc.dilate(input, input, element);
+            Imgproc.erode(input, input, element);
 
             rect = new Mat(input.rows(), input.cols(), input.type(), Scalar.all(0));
             //face un dreptunghi care stabileste zona de detectare
@@ -154,12 +156,10 @@ public class PachetelNouRosu extends OpenCvPipeline {
             //aici se elimina toate contururile din aceste mat-uri;
             original.release();
             rect.release();
-            element.release();
         }
         catch (Exception E){
             original.release();
             rect.release();
-            element.release();
         }
 
         //se returneaza input-ul modificat

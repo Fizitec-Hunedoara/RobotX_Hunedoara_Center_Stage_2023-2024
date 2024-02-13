@@ -159,7 +159,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
                 c.kdf(2300);
                 c.deschidere();
                 c.kdf(500);
-                c.melctarget(-900, 3000, 3000);
+                c.melctarget(2.3, 3000, 3000);
             }
     }
     private final Thread Pus_pe_tabla = new Thread(new Runnable() {
@@ -167,7 +167,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
         public void run() {
             if(!isStopRequested()) {
                 outOfThread = false;
-                c.melctarget(4200, 1300, 3000);
+                c.melctarget(0.85, 1300, 3000);
                 c.target(-800, 1300, c.getSlider(), 3000, 10);
                 c.kdf(300);
                 c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -181,7 +181,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
         public void run() {
             if(!isStopRequested()) {
                 c.kdf(500);
-                c.melctarget(-1400, 1300, 3000);
+                c.melctarget(2.3, 1300, 3000);
             }
         }
     });

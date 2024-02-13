@@ -153,11 +153,13 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
                     new Scalar(0, 255, 255), 4);
             //aici se elimina toate contururile din aceste mat-uri;
             original.release();
+            element.release();
             rect.release();
         }
         catch (Exception E){
             original.release();
             rect.release();
+            element.release();
         }
 
         //se returneaza input-ul modificat

@@ -39,7 +39,6 @@ public class ChestiiDeAutonom{
     private DistanceSensor distanceL, distanceR;
     private boolean sasiuInited;
     private boolean isStopRequested = false;
-    private Encoder encoderbrat;
     public void init(HardwareMap hard){
         this.init(hard, null, false);
     }
@@ -53,7 +52,7 @@ public class ChestiiDeAutonom{
         }
         sasiuInited = shouldInitSasiu;
 
-        encoderbrat = new Encoder(hard.get(DcMotorEx.class, "motorBR"));
+        potentiometru = hard.get(AnalogInput.class, "potentiometru");
         distanceL = hard.get(DistanceSensor.class, "distanceL");
         distanceR = hard.get(DistanceSensor.class, "distanceR");
 
@@ -219,7 +218,7 @@ public class ChestiiDeAutonom{
         }
         motor.setVelocity(0);
     }
-
+    public double getPotentiometruVoltage(){return potentiometru.getVoltage();}
     public double getMotorBLPower() {
         return motorBL.getPower();
     }
@@ -250,10 +249,6 @@ public class ChestiiDeAutonom{
 
     public double getMacetaPower() {
         return maceta.getPower();
-    }
-
-    public double getEncoderBrat() {
-        return encoderbrat.getCurrentPosition();
     }
 
     public double getDistanceL(DistanceUnit distanceUnit) {
@@ -314,16 +309,16 @@ public class ChestiiDeAutonom{
 
     public void melctarget(double poz, double vel, double t) {
         double lastTime = System.currentTimeMillis();
-        if (encoderbrat.getCurrentPosition() > poz) {
+        if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (encoderbrat.getCurrentPosition() > poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() > poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (encoderbrat.getCurrentPosition() < poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() < poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         melcjos.setVelocity(0);
@@ -331,16 +326,16 @@ public class ChestiiDeAutonom{
     }
     public void melctargettolerance(double poz, double vel, double t, double tolerance) {
         double lastTime = System.currentTimeMillis();
-        if (encoderbrat.getCurrentPosition() > poz) {
+        if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (encoderbrat.getCurrentPosition() > poz + tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() > poz + tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (encoderbrat.getCurrentPosition() < poz - tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() < poz - tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
             }
         }
         melcjos.setVelocity(0);

@@ -153,13 +153,13 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         c.kdf(1000);
         c.deschidere();
         c.kdf(500);
-        c.melctarget(-1400,3000,3000);
+        c.melctarget(2.3,3000,3000);
     }
     private final Thread Pus_pe_tabla = new Thread(new Runnable() {
         @Override
         public void run() {
             outOfThread = false;
-            c.melctarget(4200,1300,3000);
+            c.melctarget(0.85,1300,3000);
             c.target(-800,1300,c.getSlider(),3000,10);
             c.kdf(200);
             c.target(-300,1300,c.getSlider(),3000,10);
@@ -171,7 +171,7 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         @Override
         public void run() {
             c.kdf(500);
-            c.melctarget(-1400,1300,3000);
+            c.melctarget(2.3,1300,3000);
         }
     });
 }

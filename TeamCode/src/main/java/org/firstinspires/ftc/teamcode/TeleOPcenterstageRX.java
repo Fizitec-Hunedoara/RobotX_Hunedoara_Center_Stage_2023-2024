@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp
 public class TeleOPcenterstageRX extends OpMode {
-    private double sm = 1;
+    private double sm = 1, smm =1;
     private boolean lastx = false, lasty = false;
     private double bval = 0;
     private boolean bl;
@@ -141,11 +141,23 @@ public class TeleOPcenterstageRX extends OpMode {
             while (!stop) {
                 c.setSliderPower(gamepad2.right_stick_y);
                 if(gamepad2.dpad_up && gamepad2.right_trigger > 0){
-                    c.melctarget(520,1300,10000);
+                    c.melctarget(1.6,1300,10000);
                 }
                 else {
-                    if(c.getEncoderBrat() < 4400 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
-                        c.setMelcPower(gamepad2.left_stick_y);
+                    //c.setMelcPower(-gamepad2.left_stick_y/smm);
+//
+//                    if (gamepad2.right_trigger > 0.1){
+//                        c.setMelcPower(-gamepad2.left_stick_y/6);
+//                    }
+//                    else c.setMelcPower(-gamepad2.left_stick_y);;
+
+                    if(c.getPotentiometruVoltage() > 0.840 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
+                        if(gamepad2.right_trigger > 0){
+                            c.setMelcPower(-gamepad2.left_stick_y / 2);
+                        }
+                        else {
+                            c.setMelcPower(-gamepad2.left_stick_y);
+                        }
                     }
                     else{
                         c.setMelcPower(0);
@@ -157,11 +169,11 @@ public class TeleOPcenterstageRX extends OpMode {
                 if (gamepad2.right_bumper) {
                     c.setMacetaPower(-1.0);
                 }
-                if (c.getEncoderBrat() > 1700 && !aInchis) {
+                if (c.getPotentiometruVoltage() > 1.7 && !aInchis) {
                     aInchis=true;
                     c.inchidere();
                 }
-                else if(c.getEncoderBrat() < 1700){
+                else if(c.getPotentiometruVoltage() < 1.7){
                     aInchis = false;
                 }
                 if (gamepad2.b != bl && !aIntrat) {
@@ -205,7 +217,7 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("bl:", bl);
         telemetry.addData("sm", sm);
         telemetry.addData("gamepad2.b:", gamepad2.b);
-        telemetry.addData("pozitiebrat:", c.getEncoderBrat());
+        telemetry.addData("pozitiebrat:", c.getPotentiometruVoltage());
         telemetry.addData("distanceL:", c.getDistanceL(DistanceUnit.CM));
         telemetry.addData("distanceR:", c.getDistanceR(DistanceUnit.CM));
         telemetry.addData("ghearaL:",c.getGhearaLPosition());
