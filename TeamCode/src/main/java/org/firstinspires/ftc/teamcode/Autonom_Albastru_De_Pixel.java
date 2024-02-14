@@ -79,7 +79,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
             drive.setPoseEstimate(startPose);
             TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16, 37), Math.toRadians(315)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15 , 37), Math.toRadians(315)))
                     .build();
             if (varrez == 2) {
                 ts = drive.trajectorySequenceBuilder(startPose)
@@ -107,7 +107,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             }
             else if (varrez == 2) {
                 ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(new Vector2d(52, 34), Math.toRadians(180)))
+                        .lineToLinearHeading(new Pose2d(new Vector2d(52, 35), Math.toRadians(180)))
                         .build();
             }
             if (!isStopRequested()) {
@@ -126,7 +126,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
                 Brat_jos.start();
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(33, 10), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(33,10),Math.toRadians(180)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(-43, 10), Math.toRadians(180)))
                     .build();
             if (!isStopRequested()) {
@@ -167,10 +167,10 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
         public void run() {
             if(!isStopRequested()) {
                 outOfThread = false;
-                c.melctarget(0.85, 1300, 3000);
+                c.melctarget(0.9, 1300, 3000);
                 c.target(-800, 1300, c.getSlider(), 3000, 10);
                 c.kdf(300);
-                c.target(-300, 1300, c.getSlider(), 3000, 10);
+                c.target(-200, 1300, c.getSlider(), 3000, 10);
                 c.kdf(500);
                 outOfThread = true;
             }

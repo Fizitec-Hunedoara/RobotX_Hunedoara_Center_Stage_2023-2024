@@ -49,7 +49,6 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
      * by forgetting to call mat.release(), and it also reduces memory pressure by not
      * constantly allocating and freeing large chunks of memory.
      */
-
     @Override
     //mat = foaie de desen pentru webcam
     public Mat processFrame(Mat in) {
@@ -155,11 +154,13 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
             original.release();
             element.release();
             rect.release();
+            in.release();
         }
         catch (Exception E){
             original.release();
             rect.release();
             element.release();
+            in.release();
         }
 
         //se returneaza input-ul modificat

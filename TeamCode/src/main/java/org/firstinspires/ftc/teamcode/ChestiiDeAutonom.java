@@ -360,15 +360,15 @@ public class ChestiiDeAutonom{
     }
     public void pixel_retreat(){
         if(!isStopRequested) {
-            melctarget(-1500, 1500, 10000);
+            melctarget(2.1, 1500, 10000);
             target(-500, 2000, getSlider(), 3000, 20);
-            melctargetencoder(-1020, 1000, 10000, 20);
+            melctarget(2.2, 200, 10000);
             setMacetaPower(-1);
             kdf(300);
             target(-1650, 2000, getSlider(), 3000, 20);
             kdf(400);
             target(-1550, 2000, getSlider(), 3000, 20);
-            melctargetencoder(-1070, 1000, 10000, 20);
+            melctarget(getPotentiometruVoltage() + 0.05, 200, 10000);
             target(-1650, 2000, getSlider(), 3000, 20);
             kdf(600);
             setMacetaPower(-1);

@@ -94,7 +94,7 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
 
         if(varrez == 1) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToSplineHeading(new Pose2d(-34, -6, Math.toRadians(225)))
+                    .lineToLinearHeading(new Pose2d(-39, -40, Math.toRadians(135)))
                     .build();
         }
         if(varrez == 2){
