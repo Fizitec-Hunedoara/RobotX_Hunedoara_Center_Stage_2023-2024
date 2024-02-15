@@ -125,8 +125,8 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         c.kdf(600);
         Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(33,-10),Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(new Vector2d(-43,-10),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(33,-11),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-43,-11),Math.toRadians(180)))
                 .build();
         drive.followTrajectorySequence(ts);
         c.inchidere();

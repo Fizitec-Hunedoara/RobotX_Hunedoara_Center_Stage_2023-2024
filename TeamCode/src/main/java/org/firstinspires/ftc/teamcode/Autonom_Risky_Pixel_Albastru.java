@@ -79,11 +79,23 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(new Vector2d(15, 37), Math.toRadians(315)))
+                .lineTo(new Vector2d(0, 0))
                 .build();
+        if(varrez == 1) {
+            ts = drive.trajectorySequenceBuilder(startPose)
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 37), Math.toRadians(315)))
+                    .build();
+        }
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineTo(new Vector2d(14, 33))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         else if (varrez == 3) {
@@ -92,10 +104,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
                     .build();
         }
-        if (!isStopRequested()) {
-            drive.followTrajectorySequence(ts);
-            Pus_pe_tabla.start();
-        }
+        drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(new Vector2d(52, 28), Math.toRadians(180)))
                 .build();
@@ -126,9 +135,9 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             Brat_jos.start();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(10,60),Math.toRadians(180)))
+                .splineTo(new Vector2d(10,60),Math.toRadians(180))
                 .lineToLinearHeading(new Pose2d(new Vector2d(-30, 60), Math.toRadians(180)))
-                .splineTo(new Vector2d(-52,55),Math.toRadians(210))
+                .splineTo(new Vector2d(-52,55),Math.toRadians(235))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
@@ -137,8 +146,8 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
-                .splineTo(new Vector2d(-50,60),Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(new Vector2d(30,60),Math.toRadians(180)))
+                .splineTo(new Vector2d(-30,60),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,60),Math.toRadians(180)))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
@@ -149,7 +158,8 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(52.5, 28))
+                    .setReversed(true)
+                    .splineTo(new Vector2d(52,40),Math.toRadians(0))
                     .build();
         }
         if (varrez == 1) {

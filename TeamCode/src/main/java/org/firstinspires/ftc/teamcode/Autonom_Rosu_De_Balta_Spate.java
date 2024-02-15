@@ -53,6 +53,7 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
         telemetry.addLine("waiting for start:");
         telemetry.update();
         FtcDashboard.getInstance().startCameraStream(webcam, 60);
+        c.inchidere();
         while (!isStopRequested() && !isStarted()) {
             try {
                 rectx = pipelineRosu.getRect().width;
@@ -128,6 +129,7 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
+        c.setMacetaPower(-1);
         c.melctarget(2.3,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(20,-6))
@@ -136,17 +138,18 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(20,-6))
-                    .lineTo(new Vector2d(52,-38))
+                    .lineTo(new Vector2d(52,-36))
                     .build();
         }
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(20,-6))
-                    .lineTo(new Vector2d(52,-34))
+                    .lineTo(new Vector2d(52,-32))
                     .build();
         }
         drive.followTrajectorySequence(ts);
         c.melctarget(0.85,1300,4000);
+        c.setMacetaPower(0);
         c.target(-800,1300,c.getSlider(),3000,10);
         c.kdf(200);
         c.target(-300,1300,c.getSlider(),5000,10);
@@ -154,10 +157,8 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
         c.kdf(500);
         c.melctarget(2.3,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .lineTo(new Vector2d(47,-41))
                 .lineTo(new Vector2d(47,-12))
-                .build();
-        drive.followTrajectorySequence(ts);
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(62,-12))
                 .build();
         drive.followTrajectorySequence(ts);

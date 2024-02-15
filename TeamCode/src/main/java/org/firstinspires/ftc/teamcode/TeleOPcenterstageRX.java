@@ -12,7 +12,11 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
 public class TeleOPcenterstageRX extends OpMode {
@@ -20,17 +24,35 @@ public class TeleOPcenterstageRX extends OpMode {
     private boolean lastx = false, lasty = false;
     private double bval = 0;
     private boolean bl;
-    private double y, x, rx, max;
+    private double y, x, rx, max, ghearaLpos=0.38;
     private double lastTime;
     private double pmotorBL, pmotorBR, pmotorFL, pmotorFR;
     private boolean stop = false, aLansat = false, notEntered, aRetras = false, aIntrat = false,aInchis = false;
     private final ChestiiDeAutonom c = new ChestiiDeAutonom();
-
+    public OpenCvCamera webcam;
+    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         c.init(hardwareMap, telemetry, true);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+        webcam.setPipeline(pipelineAlbastru);
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(Var_Red.Webcam_w, Var_Red.Webcam_h, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+        telemetry.addLine("waiting for start:");
+        telemetry.update();
+        FtcDashboard.getInstance().startCameraStream(webcam, 60);
     }
 
     public void start() {
@@ -150,23 +172,12 @@ public class TeleOPcenterstageRX extends OpMode {
 //                        c.setMelcPower(-gamepad2.left_stick_y/6);
 //                    }
 //                    else c.setMelcPower(-gamepad2.left_stick_y);;
-
-                    if(c.getPotentiometruVoltage() > 0.840 || gamepad2.left_stick_y < 0 || gamepad2.right_trigger > 0) {
-                        if(gamepad2.right_trigger > 0){
-                            c.setMelcPower(-gamepad2.left_stick_y / 2);
-                        }
-                        else {
-                            c.setMelcPower(-gamepad2.left_stick_y);
-                        }
-                    }
-                    else{
-                        c.setMelcPower(0);
-                    }
+                    c.setMelcPower(-gamepad2.left_stick_y);
                 }
-                if (gamepad2.left_bumper) {
+                if (gamepad2.dpad_down) {
                     c.setMacetaPower(1.0);
                 }
-                if (gamepad2.right_bumper) {
+                if (gamepad2.dpad_up) {
                     c.setMacetaPower(-1.0);
                 }
                 if (c.getPotentiometruVoltage() > 1.7 && !aInchis) {
@@ -179,19 +190,24 @@ public class TeleOPcenterstageRX extends OpMode {
                 if (gamepad2.b != bl && !aIntrat) {
                     aIntrat = true;
                     Log.wtf("systems","check2");
-                    lastTime = System.currentTimeMillis();
                     if (gamepad2.b) {
-                        new Thread(() -> c.letPixelDrop(100)).run();
+                        //new Thread(() -> c.letPixelDrop(250)).run();
                     }
                     bl = false;
                 }
-                else if(gamepad2.b == bl && lastTime + 1000 < System.currentTimeMillis()){
+                else if(gamepad2.b == bl && lastTime + 1000 < System.currentTimeMillis()) {
                     aIntrat = false;
                 }
-                if (gamepad2.a && !aIntrat) {
+                if(gamepad2.left_bumper && gamepad2.right_bumper){
                     c.deschidere();
                 }
-                else if (gamepad2.y) {
+                else if(gamepad2.right_bumper){
+                    c.deschidereLeft();
+                }
+                else if(gamepad2.left_bumper){
+                    c.deschidereRight();
+                }
+                else{
                     c.inchidere();
                 }
             }

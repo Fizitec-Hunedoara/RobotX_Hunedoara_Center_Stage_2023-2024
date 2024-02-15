@@ -41,6 +41,11 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
     private final int elementType = Imgproc.CV_SHAPE_RECT;
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
     private Rect dreptunghi;
+    private Mat element, original, rect, input;
+    {
+        element = Imgproc.getStructuringElement(elementType, new Size(2 * CV_kernel_pult_size + 1, 2 * CV_kernel_pult_size + 1),
+                new Point(CV_kernel_pult_size, CV_kernel_pult_size));
+    }
     /*
      * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
      * highly recommended to declare them here as instance variables and re-use them for
@@ -52,14 +57,10 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
     @Override
     //mat = foaie de desen pentru webcam
     public Mat processFrame(Mat in) {
-        //face un patrat de latura kernel_pult_size si cu ancora in centru
-        Mat element = Imgproc.getStructuringElement(elementType, new Size(2 * CV_kernel_pult_size + 1, 2 * CV_kernel_pult_size + 1),
-                new Point(CV_kernel_pult_size, CV_kernel_pult_size));
         //creeaza o copie a imaginii de pe webcam
-        Mat original = in.clone();
+        original = in.clone();
         //aceasta linie de cod face un dreptunghi cat webcam-ul de mare si negru
-        Mat rect = new Mat();
-        Mat input = new Mat(in.rows(),in.cols(), CV_8UC1,Scalar.all(0));
+        input = new Mat(in.rows(),in.cols(), CV_8UC1,Scalar.all(0));
         /*
          * IMPORTANT NOTE: the input Mat that is passed in as a parameter to this method
          * will only dereference to the same image for the duration of this particular
@@ -150,18 +151,15 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
                     input,
                     getRect(),
                     new Scalar(0, 255, 255), 4);
-            //aici se elimina toate contururile din aceste mat-uri;
-            original.release();
-            element.release();
-            rect.release();
-            in.release();
+
         }
         catch (Exception E){
-            original.release();
-            rect.release();
-            element.release();
-            in.release();
+            E.printStackTrace();
         }
+
+        original.release();
+
+
 
         //se returneaza input-ul modificat
         return input;

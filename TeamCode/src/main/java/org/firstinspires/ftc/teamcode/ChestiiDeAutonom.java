@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -31,7 +32,7 @@ public class ChestiiDeAutonom{
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private DcMotorEx melcsus, melcjos, slider, motorBL, motorBR, motorFL, motorFR;
-    private Servo ghearaR, ghearaL, plauncher;
+    private ServoImplEx ghearaR, ghearaL, plauncher;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private CRServo maceta, extensorL, extensorR;
@@ -60,9 +61,9 @@ public class ChestiiDeAutonom{
         melcsus = hard.get(DcMotorEx.class, "melcsus");
         slider = hard.get(DcMotorEx.class, "slider");
 
-        ghearaL = hard.get(Servo.class, "gherutaL");
-        ghearaR = hard.get(Servo.class, "gherutaR");
-        plauncher = hard.get(Servo.class, "plauncher");
+        ghearaL = hard.get(ServoImplEx.class, "gherutaL");
+        ghearaR = hard.get(ServoImplEx.class, "gherutaR");
+        plauncher = hard.get(ServoImplEx.class, "plauncher");
 
         maceta = hard.get(CRServo.class, "maceta");
         extensorL = hard.get(CRServo.class, "extensorL");
@@ -175,6 +176,8 @@ public class ChestiiDeAutonom{
     public double getGhearaRPosition(){
         return ghearaR.getPosition();
     }
+    public void setGhearaLPosition(double pos){ghearaL.setPosition(pos);}
+    public void setGhearaRPosition(double pos){ghearaR.setPosition(pos);}
     public void detectieTaguriAprilie(int DESIRED_TAG_ID) {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
 
@@ -193,7 +196,8 @@ public class ChestiiDeAutonom{
             }
         }
     }
-
+    public void disableGhearaL(){ghearaL.setPwmDisable();}
+    public void disableGhearaR(){ghearaR.setPwmDisable();}
     public void deschidere() {
         ghearaR.setPosition(0.14);
         ghearaL.setPosition(0.64);
@@ -297,16 +301,25 @@ public class ChestiiDeAutonom{
     }
 
     public void letPixelDrop(long delay) {
-        deschidere();
+        ghearaL.setPosition(0.445);
+        ghearaR.setPosition(0.14);
         try {
             Thread.sleep(delay);
         }
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        inchidere();
+        ghearaR.setPosition(0.38);
+        ghearaL.setPosition(0.38);
     }
-
+    public void deschidereLeft(){
+        setGhearaLPosition(0.64);
+        setGhearaRPosition(0.285);
+    }
+    public void deschidereRight(){
+        setGhearaLPosition(0.465);
+        setGhearaRPosition(0.14);
+    }
     public void melctarget(double poz, double vel, double t) {
         double lastTime = System.currentTimeMillis();
         if (getPotentiometruVoltage() > poz) {
@@ -341,6 +354,12 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
         melcsus.setVelocity(0);
     }
+    public void setMacetaTimp(long t, double pow){
+        long lastTime = System.currentTimeMillis();
+        maceta.setPower(pow);
+        while(lastTime + t > System.currentTimeMillis());
+        maceta.setPower(0);
+    }
     public void melctargetencoder(double poz, double vel, double t, double tolerance){
         if (melcjos.getCurrentPosition() < poz) {
             melcjos.setVelocity(vel);
@@ -359,20 +378,18 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
     }
     public void pixel_retreat(){
-        if(!isStopRequested) {
-            melctarget(2.1, 1500, 10000);
+            melctarget(2.0, 1500, 10000);
             target(-500, 2000, getSlider(), 3000, 20);
-            melctarget(2.2, 200, 10000);
+            melctarget(2.13, 100, 10000);
             setMacetaPower(-1);
             kdf(300);
             target(-1650, 2000, getSlider(), 3000, 20);
             kdf(400);
             target(-1550, 2000, getSlider(), 3000, 20);
-            melctarget(getPotentiometruVoltage() + 0.05, 200, 10000);
-            target(-1650, 2000, getSlider(), 3000, 20);
+            melctarget(getPotentiometruVoltage() + 0.01, 200, 10000);
+            target(-1650, 2000, getSlider(), 1000, 20);
             kdf(600);
-            setMacetaPower(-1);
-        }
+            setMacetaPower(0);
     }
 
     public synchronized void setPlauncherPosition(double position) {
