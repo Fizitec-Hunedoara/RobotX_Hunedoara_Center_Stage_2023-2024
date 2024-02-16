@@ -84,6 +84,14 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         if(varrez == 1) {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15, 37), Math.toRadians(315)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.kdf(1500);
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         if (varrez == 2) {
@@ -102,6 +110,13 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         drive.followTrajectorySequence(ts);
@@ -135,38 +150,35 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             Brat_jos.start();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(10,60),Math.toRadians(180))
-                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 60), Math.toRadians(180)))
-                .splineTo(new Vector2d(-52,55),Math.toRadians(235))
+                .splineTo(new Vector2d(10,59),Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 59), Math.toRadians(180)))
+                .splineTo(new Vector2d(-53,44),Math.toRadians(235))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
             c.inchidere();
-            c.pixel_retreat();
+            c.pixel_retreat(-1000);
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
-                .splineTo(new Vector2d(-30,60),Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(new Vector2d(10,60),Math.toRadians(180)))
+                .splineTo(new Vector2d(-30,58),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,58),Math.toRadians(180)))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.kdf(1000);
+                    c.melctarget(0.9, 700, 3000);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(300);
+                    c.target(-300, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(500);
+                }).start())
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
-            Pus_pe_tabla.start();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(52.5, 34))
+                .setReversed(true)
+                .splineTo(new Vector2d(52,40),Math.toRadians(0))
                 .build();
-        if (varrez == 2) {
-            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .setReversed(true)
-                    .splineTo(new Vector2d(52,40),Math.toRadians(0))
-                    .build();
-        }
-        if (varrez == 1) {
-            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(52.5, 39))
-                    .build();
-        }
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
             c.kdf(2300);

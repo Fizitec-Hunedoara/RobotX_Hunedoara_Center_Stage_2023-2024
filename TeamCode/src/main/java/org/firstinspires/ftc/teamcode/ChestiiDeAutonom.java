@@ -109,7 +109,7 @@ public class ChestiiDeAutonom{
         motorBL.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public synchronized void POWER(double df1, double sf1, double ds1, double ss1) {
+    public synchronized void POWER(double df1, double sf1,double ds1, double ss1) {
         if (sasiuInited) {
             motorFR.setPower(df1);
             motorBL.setPower(ss1);
@@ -199,13 +199,18 @@ public class ChestiiDeAutonom{
     public void disableGhearaL(){ghearaL.setPwmDisable();}
     public void disableGhearaR(){ghearaR.setPwmDisable();}
     public void deschidere() {
-        ghearaR.setPosition(0.14);
-        ghearaL.setPosition(0.64);
+        ghearaR.setPosition(0.25);
+        ghearaL.setPosition(0.75);
+    }
+
+    public void deschidereJumate(){
+        ghearaR.setPosition(0.5);
+        ghearaL.setPosition(0.5);
     }
 
     public void inchidere() {
-        ghearaR.setPosition(0.38);
-        ghearaL.setPosition(0.38);
+        ghearaR.setPosition(1);
+        ghearaL.setPosition(0);
     }
 
     public synchronized void target(double poz, double vel, DcMotorEx motor, double t, int tolerance) {
@@ -361,7 +366,7 @@ public class ChestiiDeAutonom{
         maceta.setPower(0);
     }
     public void melctargetencoder(double poz, double vel, double t, double tolerance){
-        if (melcjos.getCurrentPosition() < poz) {
+        if (melcjos.getCurrentPosition() > poz) {
             melcjos.setVelocity(vel);
             melcsus.setVelocity(vel);
         }
@@ -377,18 +382,14 @@ public class ChestiiDeAutonom{
         melcsus.setVelocity(0);
         melcjos.setVelocity(0);
     }
-    public void pixel_retreat(){
+    public void pixel_retreat(double melcpoz){
             melctarget(2.0, 1500, 10000);
             target(-500, 2000, getSlider(), 3000, 20);
-            melctarget(2.13, 100, 10000);
+            melctargetencoder(melcpoz, 100, 10000,10);
             setMacetaPower(-1);
             kdf(300);
             target(-1650, 2000, getSlider(), 3000, 20);
-            kdf(400);
-            target(-1550, 2000, getSlider(), 3000, 20);
-            melctarget(getPotentiometruVoltage() + 0.01, 200, 10000);
-            target(-1650, 2000, getSlider(), 1000, 20);
-            kdf(600);
+            kdf(1200);
             setMacetaPower(0);
     }
 

@@ -41,6 +41,7 @@ public class PachetelNouRosu extends OpenCvPipeline {
     private final int elementType = Imgproc.CV_SHAPE_RECT;
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
     private Rect dreptunghi;
+    List<MatOfPoint> contours = new ArrayList<>();
     private Mat element, original, rect, input;
     {
         element = Imgproc.getStructuringElement(elementType, new Size(2 * Var_Blue.CV_kernel_pult_size + 1, 2 * Var_Blue.CV_kernel_pult_size + 1),
@@ -54,7 +55,6 @@ public class PachetelNouRosu extends OpenCvPipeline {
      * by forgetting to call mat.release(), and it also reduces memory pressure by not
      * constantly allocating and freeing large chunks of memory.
      */
-
     @Override
     //mat = foaie de desen pentru webcam
     public Mat processFrame(Mat in) {
@@ -116,7 +116,7 @@ public class PachetelNouRosu extends OpenCvPipeline {
             Core.bitwise_and(input, rect, input);
 
             //asta declara o lista de contururi;
-            List<MatOfPoint> contours = new ArrayList<>();
+
             //input e imaginea, contours este lista de contururi, retr_list doar da toate contururile, chain_approx_simple face ca formele sa fie facute numai din Var_Redfurile lor
             Imgproc.findContours(input, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
             //Aici se sorteaza contururile in mod descrescator;
@@ -158,6 +158,7 @@ public class PachetelNouRosu extends OpenCvPipeline {
         catch (Exception E){
             E.printStackTrace();
         }
+        contours.clear();
         original.release();
         //se returneaza input-ul modificat
         return input;

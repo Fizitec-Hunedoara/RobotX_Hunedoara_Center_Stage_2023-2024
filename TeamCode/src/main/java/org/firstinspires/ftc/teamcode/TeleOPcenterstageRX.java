@@ -24,35 +24,45 @@ public class TeleOPcenterstageRX extends OpMode {
     private boolean lastx = false, lasty = false;
     private double bval = 0;
     private boolean bl;
-    private double y, x, rx, max, ghearaLpos=0.38;
+    private double y, x, rx, max, ghearaLpos = 0.5, ghearaRpos = 0.5;
     private double lastTime;
     private double pmotorBL, pmotorBR, pmotorFL, pmotorFR;
     private boolean stop = false, aLansat = false, notEntered, aRetras = false, aIntrat = false,aInchis = false;
     private final ChestiiDeAutonom c = new ChestiiDeAutonom();
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
+
+    public long lastDeschidereTimestamp, inchidereDelay = 500;
+    private boolean rightBumperLast;
+
+    private enum OuttakeState{
+        INCHIS,
+        ONE_PIXEL,
+        TWO_PIXELS
+    }
+    private OuttakeState outtakeState = OuttakeState.INCHIS;
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         c.init(hardwareMap, telemetry, true);
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
-        webcam.setPipeline(pipelineAlbastru);
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(Var_Red.Webcam_w, Var_Red.Webcam_h, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-
-            }
-        });
-        telemetry.addLine("waiting for start:");
-        telemetry.update();
-        FtcDashboard.getInstance().startCameraStream(webcam, 60);
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
+//        webcam.setPipeline(pipelineAlbastru);
+//        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//            @Override
+//            public void onOpened() {
+//                webcam.startStreaming(Var_Red.Webcam_w, Var_Red.Webcam_h, OpenCvCameraRotation.UPRIGHT);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {
+//
+//            }
+//        });
+//        telemetry.addLine("waiting for start:");
+//        telemetry.update();
+//        FtcDashboard.getInstance().startCameraStream(webcam, 60);
     }
 
     public void start() {
@@ -198,16 +208,29 @@ public class TeleOPcenterstageRX extends OpMode {
                 else if(gamepad2.b == bl && lastTime + 1000 < System.currentTimeMillis()) {
                     aIntrat = false;
                 }
-                if(gamepad2.left_bumper && gamepad2.right_bumper){
+
+                if(gamepad2.left_bumper){
                     c.deschidere();
                 }
-                else if(gamepad2.right_bumper){
-                    c.deschidereLeft();
+                else if(gamepad2.right_bumper != rightBumperLast){
+                    if(gamepad2.right_bumper){
+                        if(outtakeState == OuttakeState.INCHIS){
+                            c.deschidereJumate();
+                            outtakeState = OuttakeState.ONE_PIXEL;
+                        }
+                        else if(outtakeState == OuttakeState.ONE_PIXEL){
+                            c.deschidere();
+                            lastDeschidereTimestamp = System.currentTimeMillis();
+                            outtakeState = OuttakeState.TWO_PIXELS;
+                        }
+                    }
+                    rightBumperLast = gamepad2.right_bumper;
                 }
-                else if(gamepad2.left_bumper){
-                    c.deschidereRight();
+                else if(outtakeState == OuttakeState.TWO_PIXELS && System.currentTimeMillis() > lastDeschidereTimestamp + inchidereDelay){
+                    c.inchidere();
+                    outtakeState = OuttakeState.INCHIS;
                 }
-                else{
+                else if(outtakeState == OuttakeState.INCHIS){
                     c.inchidere();
                 }
             }
@@ -234,6 +257,7 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("sm", sm);
         telemetry.addData("gamepad2.b:", gamepad2.b);
         telemetry.addData("pozitiebrat:", c.getPotentiometruVoltage());
+        telemetry.addData("pozitiebratencoder:",c.getMelcJosPosition());
         telemetry.addData("distanceL:", c.getDistanceL(DistanceUnit.CM));
         telemetry.addData("distanceR:", c.getDistanceR(DistanceUnit.CM));
         telemetry.addData("ghearaL:",c.getGhearaLPosition());

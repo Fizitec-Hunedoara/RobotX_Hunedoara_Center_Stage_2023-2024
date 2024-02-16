@@ -40,6 +40,7 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
     //stabileste forma detectorului(dreptunghi)
     private final int elementType = Imgproc.CV_SHAPE_RECT;
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
+    List<MatOfPoint> contours = new ArrayList<>();
     private Rect dreptunghi;
     private Mat element, original, rect, input;
     {
@@ -72,7 +73,6 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
         try {
             //Scalari de HSV(totusi H e jumate din valorile de pe color picker)
             Scalar scalarLowerHSV, scalarUpperHSV;
-
             //daca e day da valorile de day, daca e night da valorile de night
             if (CV_detectionType == Var_Blue.DetectionTypes.DAY) {
                 scalarLowerHSV = new Scalar(Day_Hlow, Day_Slow, Day_Vlow);
@@ -110,11 +110,11 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
             );
 //            Log.d("dimensiuni input:", input.toString());
 //            Log.d("dimensiuni rect:", rect.toString());
-            //aici se conveerteste culoarea in alb-negru, albul fiind chestiile detectate
+            //aici se limitează aria de detectare la dreptunghiul declarat înainte de acest pas
             Core.bitwise_and(input, rect, input);
 
             //asta declara o lista de contururi;
-            List<MatOfPoint> contours = new ArrayList<>();
+
             //input e imaginea, contours este lista de contururi, retr_list doar da toate contururile, chain_approx_simple face ca formele sa fie facute numai din varfurile lor
             Imgproc.findContours(input, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
             //Aici se sorteaza contururile in mod descrescator;
@@ -139,28 +139,23 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
             //deseneaza toate contururile, con
             // tourldx=-1 inseamna ca sunt desenate TOATE contururile
             Imgproc.drawContours(input, contours, -1, new Scalar(0, 255, 0), 4);
-            //aici se deseneaza dreeptunghiul care stabileste aria de detectare
+            //aici se deseneaza dreptunghiul care stabileste aria de detectare
             Imgproc.rectangle(
                     input,
                     new Point(CV_rect_x1, CV_rect_y1),
                     new Point(CV_rect_x2, CV_rect_y2),
                     new Scalar(255, 127, 0), 4);
-
-            //asta umple forma pe care a detectat-o
+            //aici se deseneaza un contur turcoaz la forma detectată
             Imgproc.rectangle(
                     input,
                     getRect(),
                     new Scalar(0, 255, 255), 4);
-
         }
         catch (Exception E){
             E.printStackTrace();
         }
-
+        contours.clear();
         original.release();
-
-
-
         //se returneaza input-ul modificat
         return input;
     }
