@@ -132,7 +132,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             if (!isStopRequested()) {
                 drive.followTrajectorySequence(ts);
                 c.inchidere();
-                c.pixel_retreat(2.25);
+                c.pixel_retreat();
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(30, 11))

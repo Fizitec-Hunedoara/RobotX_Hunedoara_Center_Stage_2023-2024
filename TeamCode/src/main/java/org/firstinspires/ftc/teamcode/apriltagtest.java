@@ -92,7 +92,6 @@ public class apriltagtest extends LinearOpMode {
         waitForStart();
         // Step through the list of detected tags and look for a matching tag
         while (!isStopRequested()) {
-            pid.setPID(pcam, icam, dcam);
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
             for (AprilTagDetection detection : currentDetections) {
                 // Look to see if we have size info on this tag.

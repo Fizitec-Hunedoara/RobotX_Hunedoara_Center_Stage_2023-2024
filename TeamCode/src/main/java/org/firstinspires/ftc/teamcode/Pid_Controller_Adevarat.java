@@ -6,6 +6,7 @@ public class Pid_Controller_Adevarat
     private double m_P;                     // factor for "proportional" control
     private double m_I;                     // factor for "integral" control
     private double m_D;                     // factor for "derivative" control
+    private double m_F;
     private double m_input;                 // sensor input for pid controller
     private double m_maximumOutput = 1.0;	// |maximum output|
     private double m_minimumOutput = -1.0;	// |minimum output|
@@ -67,14 +68,11 @@ public class Pid_Controller_Adevarat
                 m_totalError += m_error;
 
             // Perform the primary PID calculation
-            m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
+            m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError) +  m_F;
 
             // Set the current error to the previous error for the next cycle.
             m_prevPrevError = m_prevError;
             m_prevError = m_error;
-
-            // Make sure the final result is within bounds. If we constrain the result, we make
-            // sure the sign of the constrained result matches the original result sign.
         }
     }
 
@@ -85,22 +83,16 @@ public class Pid_Controller_Adevarat
      * @param i Integral coefficient
      * @param d Differential coefficient
      */
-    public void setPID(double p, double i, double d)
+    public void setPID(double p, double i, double d, double f)
     {
         if(i != m_I){
             m_totalError = 0;
         }
+
         m_P = p;
         m_I = i;
-
-//        //normalising the total error
-//        if(m_totalError * m_I < m_minimumOutput && m_I != 0.0){
-//            m_totalError = m_minimumOutput / m_I;
-//        }
-//        else if(m_totalError * m_I > m_maximumOutput && m_I != 0.0){
-//            m_totalError = m_maximumOutput / m_I;
-//        }
         m_D = d;
+        m_F = f;
     }
 
     /**

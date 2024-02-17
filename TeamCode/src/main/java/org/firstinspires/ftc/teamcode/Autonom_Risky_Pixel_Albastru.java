@@ -20,9 +20,9 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
     int varrez = 2,poz2=100;
+    public ChestiiDeAutonom c = new ChestiiDeAutonom();
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
@@ -137,13 +137,6 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
-        c.kdf(100);
-        if (varrez == 2) {
-            c.kdf(1000);
-        }
-        else if (varrez == 3) {
-            c.kdf(1300);
-        }
         c.deschidere();
         c.kdf(600);
         if (!isStopRequested()) {
@@ -157,7 +150,12 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
             c.inchidere();
-            c.pixel_retreat(-1000);
+            c.pixel_advance();
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineTo(new Vector2d(-52 - 2,44 - 1.4281 * 5))
+                    .build();
+            drive.followTrajectorySequence(ts);
+            c.pixel_retreat();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
@@ -184,6 +182,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             c.kdf(2300);
             c.deschidere();
             c.kdf(500);
+            c.inchidere();
             c.melctarget(2.3, 3000, 3000);
         }
     }

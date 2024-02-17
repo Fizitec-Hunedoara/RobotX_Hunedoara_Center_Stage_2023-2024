@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
-
+import java.util.Random;
 import static org.firstinspires.ftc.teamcode.util.LogFiles.log;
 import static java.lang.Math.abs;
+import static java.lang.Math.sqrt;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
@@ -28,6 +31,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import kotlin.math.UMathKt;
+
 public class ChestiiDeAutonom{
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
@@ -38,16 +43,16 @@ public class ChestiiDeAutonom{
     private CRServo maceta, extensorL, extensorR;
     private AnalogInput potentiometru;
     private DistanceSensor distanceL, distanceR;
+    private RevBlinkinLedDriver led;
     private boolean sasiuInited;
     private boolean isStopRequested = false;
     public void init(HardwareMap hard){
         this.init(hard, null, false);
     }
-
+    Pid_Controller_Adevarat pid = new Pid_Controller_Adevarat(configPID.p,configPID.i,configPID.d);
     public void init(HardwareMap hard, Telemetry telemetry, boolean shouldInitSasiu) {
         this.hardwareMap = hard;
         this.telemetry = telemetry;
-
         if (shouldInitSasiu) {
             initSasiu(hard);
         }
@@ -56,6 +61,7 @@ public class ChestiiDeAutonom{
         potentiometru = hard.get(AnalogInput.class, "potentiometru");
         distanceL = hard.get(DistanceSensor.class, "distanceL");
         distanceR = hard.get(DistanceSensor.class, "distanceR");
+        led = hard.get(RevBlinkinLedDriver.class,"led");
 
         melcjos = hard.get(DcMotorEx.class, "melcjos");
         melcsus = hard.get(DcMotorEx.class, "melcsus");
@@ -81,7 +87,7 @@ public class ChestiiDeAutonom{
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         melcjos.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        melcsus.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        melcsus.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -136,7 +142,7 @@ public class ChestiiDeAutonom{
     public void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
-        if (visionPortal == null) {
+        if (visionPortal == null) {pid.enable();
             return;
         }
 
@@ -170,6 +176,15 @@ public class ChestiiDeAutonom{
         initAprilTag();
         setManualExposure(6, 250);
     }
+    public void setLedPattern(RevBlinkinLedDriver.BlinkinPattern pattern){
+        led.setPattern(pattern);
+    }
+    public void setRandomPattern(int t){
+        Random rand = new Random();
+        RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.fromNumber(rand.nextInt(100));
+        setLedPattern(pattern);
+        kdf(t);
+    }
     public double getGhearaLPosition(){
         return ghearaL.getPosition();
     }
@@ -196,6 +211,7 @@ public class ChestiiDeAutonom{
             }
         }
     }
+
     public void disableGhearaL(){ghearaL.setPwmDisable();}
     public void disableGhearaR(){ghearaR.setPwmDisable();}
     public void deschidere() {
@@ -255,11 +271,15 @@ public class ChestiiDeAutonom{
     public double getMelcsusPower() {
         return melcsus.getPower();
     }
-
+    public double getMelcSusVelocity(){return melcsus.getVelocity();}
+    public double getMelcJosVelocity(){return melcjos.getVelocity();}
     public double getMacetaPower() {
         return maceta.getPower();
     }
-
+    public void setMelcPIDFCoefficients(double kp, double ki, double kd, double kf){
+        melcsus.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(kp,ki,kd,kf));
+        melcjos.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(kp,ki,kd,kf));
+    }
     public double getDistanceL(DistanceUnit distanceUnit) {
         return distanceL.getDistance(distanceUnit);
     }
@@ -290,7 +310,8 @@ public class ChestiiDeAutonom{
         melcsus.setPower(melcPower);
         melcjos.setPower(melcPower);
     }
-
+    public double getAngleFromVoltage(double voltage){return getAngleFromVout(voltage);}
+    public double getCurrentPotentiometruAngle(){return getAngleFromVout(getPotentiometruVoltage());}
     public void setSliderPower(double sliderPower) {
         slider.setPower(sliderPower);
     }
@@ -304,7 +325,13 @@ public class ChestiiDeAutonom{
         kdf(t);
         maceta.setPower(0);
     }
-
+    public void setMelcVelocity(double velocity){
+        melcsus.setVelocity(velocity);
+        melcjos.setVelocity(velocity);
+    }
+    public void setSliderVelocity(double velocity){
+        slider.setVelocity(velocity);
+    }
     public void letPixelDrop(long delay) {
         ghearaL.setPosition(0.445);
         ghearaR.setPosition(0.14);
@@ -342,6 +369,25 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
         melcsus.setVelocity(0);
     }
+
+    public void melctargetRealAngle(double angle, double vel, double t) {
+        double lastTime = System.currentTimeMillis();
+        if (getCurrentPotentiometruAngle() < angle) {
+            melcsus.setVelocity(-vel);
+            melcjos.setVelocity(-vel);
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        else {
+            melcsus.setVelocity(vel);
+            melcjos.setVelocity(vel);
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        melcjos.setVelocity(0);
+        melcsus.setVelocity(0);
+    }
+
     public void melctargettolerance(double poz, double vel, double t, double tolerance) {
         double lastTime = System.currentTimeMillis();
         if (getPotentiometruVoltage() > poz) {
@@ -382,19 +428,27 @@ public class ChestiiDeAutonom{
         melcsus.setVelocity(0);
         melcjos.setVelocity(0);
     }
-    public void pixel_retreat(double melcpoz){
-            melctarget(2.0, 1500, 10000);
-            target(-500, 2000, getSlider(), 3000, 20);
-            melctargetencoder(melcpoz, 100, 10000,10);
+    public void pixel_advance(){
+            melctargetRealAngle(440,1500,10000);
+            target(-1120, 2000, getSlider(), 3000, 20);
+            melctargetRealAngle(417, 1500, 10000);
             setMacetaPower(-1);
-            kdf(300);
-            target(-1650, 2000, getSlider(), 3000, 20);
-            kdf(1200);
-            setMacetaPower(0);
     }
-
+    public void pixel_retreat(){
+        melctargetRealAngle(425,1500,10000);
+        target(0, 2000, getSlider(), 3000, 20);
+        setMacetaPower(0);
+    }
     public synchronized void setPlauncherPosition(double position) {
         plauncher.setPosition(position);
+    }
+
+    public double getAngleFromVout(double vout){
+        return (270 * vout + 445.5 + 23.382 * sqrt(400 * vout * vout - 440 * vout + 363)) / (2 * vout);
+    }
+
+    public PIDFCoefficients getMelcPIDFCoefficients() {
+        return melcjos.getPIDFCoefficients(melcjos.getMode());
     }
 
     public void kdf(long t) {

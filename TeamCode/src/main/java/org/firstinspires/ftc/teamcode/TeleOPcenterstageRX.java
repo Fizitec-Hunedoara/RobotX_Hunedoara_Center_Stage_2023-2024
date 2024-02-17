@@ -2,13 +2,14 @@
 De asemenea, daca ceva da eroare in cod si nu stii de ce, verifica mai intai daca este importata chestia sau nu.
  */
 package org.firstinspires.ftc.teamcode;
-
+import java.util.Random;
 import static java.lang.Math.abs;
 
 import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,6 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
 public class TeleOPcenterstageRX extends OpMode {
+    private RevBlinkinLedDriver.BlinkinPattern pattern;
     private double sm = 1, smm =1;
     private boolean lastx = false, lasty = false;
     private double bval = 0;
@@ -31,7 +33,6 @@ public class TeleOPcenterstageRX extends OpMode {
     private final ChestiiDeAutonom c = new ChestiiDeAutonom();
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
-
     public long lastDeschidereTimestamp, inchidereDelay = 500;
     private boolean rightBumperLast;
 
@@ -44,7 +45,6 @@ public class TeleOPcenterstageRX extends OpMode {
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         c.init(hardwareMap, telemetry, true);
 //        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 //        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
@@ -133,6 +133,8 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+                c.setLedPattern(pattern);
                 if (gamepad2.dpad_up && gamepad2.left_trigger > 0) {
                     lastTime = System.currentTimeMillis();
                     c.setPlauncherPosition(0.5);
@@ -141,7 +143,6 @@ public class TeleOPcenterstageRX extends OpMode {
                 else {
                     c.setPlauncherPosition(0.35);
                 }
-
                 /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }
@@ -171,6 +172,7 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
+
                 c.setSliderPower(gamepad2.right_stick_y);
                 if(gamepad2.dpad_up && gamepad2.right_trigger > 0){
                     c.melctarget(1.6,1300,10000);
@@ -252,6 +254,7 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("melcjos:", c.getMelcJosPosition());
         telemetry.addData("melcsus:", c.getMelcsusPower());
         telemetry.addData("macetaPow:", c.getMacetaPower());
+        telemetry.addData("extensorPow:",c.getSlider().getCurrentPosition());
         telemetry.addData("bval:", bval);
         telemetry.addData("bl:", bl);
         telemetry.addData("sm", sm);
@@ -262,6 +265,7 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("distanceR:", c.getDistanceR(DistanceUnit.CM));
         telemetry.addData("ghearaL:",c.getGhearaLPosition());
         telemetry.addData("ghearaR:",c.getGhearaRPosition());
+        telemetry.addData("getBratAngle:",c.getCurrentPotentiometruAngle());
         telemetry.update();
     }
 }

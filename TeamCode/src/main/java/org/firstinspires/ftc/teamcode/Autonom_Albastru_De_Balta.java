@@ -139,7 +139,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         @Override
         public void run() {
             outOfThread = false;
-            c.melctarget(0.85,1300,3000);
+            c.melctarget(c.getAngleFromVoltage(0.8),1300,3000);
             c.target(-800,1300,c.getSlider(),3000,10);
             c.kdf(200);
             c.target(-300,1300,c.getSlider(),3000,10);
@@ -151,7 +151,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         @Override
         public void run() {
             c.kdf(500);
-            c.melctarget(2.3,1300,3000);
+            c.melctarget(c.getAngleFromVoltage(2.3),1300,3000);
         }
     });
     private final Thread Brat_stop = new Thread(new Runnable() {
