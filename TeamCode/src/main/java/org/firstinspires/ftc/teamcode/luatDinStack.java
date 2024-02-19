@@ -17,8 +17,7 @@ public class luatDinStack extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
-        c.melctarget(2.29,800,3000);
-        c.setMacetaPower(-1);
-        c.target(-1500,800, c.getSlider(), 3000,1);
+        waitForStart();
+        c.melctargetRealAngleAdaptive(424,10,30000);
     }
 }

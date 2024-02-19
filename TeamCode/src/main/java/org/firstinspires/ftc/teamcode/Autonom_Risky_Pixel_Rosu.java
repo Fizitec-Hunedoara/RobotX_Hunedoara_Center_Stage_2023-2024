@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Var_Blue.CV_detectionType;
+import static org.firstinspires.ftc.teamcode.Var_Red.CV_detectionType;
+import static org.firstinspires.ftc.teamcode.Var_Red.Webcam_h;
+import static org.firstinspires.ftc.teamcode.Var_Red.Webcam_w;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -16,27 +18,26 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
-public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
+public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
     int varrez = 2,poz2=100;
     public ChestiiDeAutonom c = new ChestiiDeAutonom();
     public OpenCvCamera webcam;
-    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
+    public PachetelNouRosu pipelineRosu = new PachetelNouRosu();
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
-        CV_detectionType = Var_Blue.DetectionTypes.DAY;
+        CV_detectionType = Var_Red.DetectionTypes.DAY;
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"), cameraMonitorViewId);
-        webcam.setPipeline(pipelineAlbastru);
+        webcam.setPipeline(pipelineRosu);
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.startStreaming(Var_Red.Webcam_w, Var_Red.Webcam_h, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(Webcam_w, Webcam_h, OpenCvCameraRotation.UPRIGHT);
             }
-
             @Override
             public void onError(int errorCode) {
 
@@ -47,28 +48,26 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(webcam, 60);
         while (!isStopRequested() && !isStarted()) {
             try {
-                rectx = pipelineAlbastru.getRect().width;
-                recty = pipelineAlbastru.getRect().height;
+                rectx = pipelineRosu.getRect().width;
+                recty = pipelineRosu.getRect().height;
                 hperw = recty / rectx;
                 telemetry.addData("rectangle width:", rectx);
                 telemetry.addData("rectangle height:", recty);
                 telemetry.addData("height / width:", hperw);
-                x = pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width / 2.0;
-                telemetry.addData("x:", pipelineAlbastru.getRect().x + pipelineAlbastru.getRect().width / 2);
-                if (x == 0) {
-                    varrez = 3;
-                }
-                else if (x > 250 && x < 600) {
+                x = pipelineRosu.getRect().x + pipelineRosu.getRect().width/2.0;
+                telemetry.addData("x:",pipelineRosu.getRect().x + pipelineRosu.getRect().width/2);
+                if (x < 350 && x > 100) {
                     varrez = 2;
                 }
-                else if (x < 250) {
-                    varrez = 1;
-                }
-                else {
+                else if(x > 350){
                     varrez = 3;
                 }
+                else{
+                    varrez = 1;
+                }
                 telemetry.addData("caz:", varrez);
-            } catch (Exception E) {
+            }
+            catch (Exception E) {
                 varrez = 1;
                 telemetry.addData("Webcam error:", "please restart");
                 telemetry.update();
@@ -76,14 +75,14 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             telemetry.update();
         }
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(14.783464, -62.73622, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .lineTo(new Vector2d(0, 0))
                 .build();
-        if(varrez == 1) {
+        if(varrez == 3) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 37), Math.toRadians(315)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15, -37), Math.toRadians(45)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -96,7 +95,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(14, 33))
+                    .lineTo(new Vector2d(14, -33))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
@@ -106,10 +105,10 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
                     }).start())
                     .build();
         }
-        else if (varrez == 3) {
+        else if (varrez == 1) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15, -48), Math.toRadians(130)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(10, -34), Math.toRadians(160)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
@@ -121,17 +120,17 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(52, 28), Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(52, -28), Math.toRadians(180)))
                 .build();
-        if (varrez == 1) {
+        if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16, 48), Math.toRadians(270)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 40), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(16, -48), Math.toRadians(90)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52, -42), Math.toRadians(180)))
                     .build();
         }
         else if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 35), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52, -35), Math.toRadians(180)))
                     .build();
         }
         if (!isStopRequested()) {
@@ -139,30 +138,28 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         c.deschidere();
         c.kdf(600);
-        if (!isStopRequested()) {
-            Brat_jos.start();
-        }
+        c.inchidere();
+        Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(10,57),Math.toRadians(180))
-                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 57), Math.toRadians(180)))
+                .splineTo(new Vector2d(10,-57),Math.toRadians(180))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, -57), Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.pixel_advance();
                 }).start())
-                .splineTo(new Vector2d(-53,44),Math.toRadians(235))
+                .splineTo(new Vector2d(-53,-44),Math.toRadians(125))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
-            c.inchidere();
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(-54,37),Math.toRadians(220)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(-54,-37),Math.toRadians(138)))
                     .build();
             drive.followTrajectorySequence(ts);
             c.pixel_retreat();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
-                .splineTo(new Vector2d(-30,57),Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(new Vector2d(10,57),Math.toRadians(180)))
+                .splineTo(new Vector2d(-30,-57),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,-57),Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1000);
                     c.melctarget(0.87, 700, 3000);
@@ -175,16 +172,16 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
-        if(varrez == 2 || varrez == 3){
+        if(varrez == 2 || varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .setReversed(true)
-                    .splineTo(new Vector2d(52,41),Math.toRadians(0))
+                    .splineTo(new Vector2d(52,-41),Math.toRadians(0))
                     .build();
         }
         else{
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .setReversed(true)
-                    .splineTo(new Vector2d(52,37),Math.toRadians(0))
+                    .splineTo(new Vector2d(52,-37),Math.toRadians(0))
                     .build();
         }
         if (!isStopRequested()) {
@@ -196,7 +193,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             c.melctarget(2.3, 3000, 3000);
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .setReversed(true)
-                    .lineTo(new Vector2d(47,60))
+                    .lineTo(new Vector2d(47,-60))
                     .build();
             drive.followTrajectorySequence(ts);
         }

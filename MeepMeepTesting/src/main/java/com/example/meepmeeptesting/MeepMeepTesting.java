@@ -10,42 +10,14 @@ public class MeepMeepTesting {
         // Declare a MeepMeep instance
         // With a field size of 800 pixels
         MeepMeep meepMeep = new MeepMeep(800);
-//        RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
-//                // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-//                .setConstraints(DriveConstants.MAX_VEL, DriveConstants.MAX_ACCEL, DriveConstants.MAX_ANG_VEL, DriveConstants.MAX_ANG_ACCEL, DriveConstants.TRACK_WIDTH)
-//                // Option: Set theme. Default = ColorSchemeRedDark()
-//                .setColorScheme(new ColorSchemeRedDark())
-//                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(14.783464, 62.73622, Math.toRadians(270)))
-////                                .lineTo(new Vector2d(14, 33))
-////                                .lineToLinearHeading(new Pose2d(new Vector2d(52, 34), Math.toRadians(180)))
-////                                .splineTo(new Vector2d(10,60),Math.toRadians(180))
-////                                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 60), Math.toRadians(180)))
-////                                .splineTo(new Vector2d(-52,55),Math.toRadians(235))
-////                                .setReversed(true)
-////                                .splineTo(new Vector2d(-30,60),Math.toRadians(0))
-////                                .lineToSplineHeading(new Pose2d(new Vector2d(10,60),Math.toRadians(180)))
-////                                .splineTo(new Vector2d(52,40),Math.toRadians(0))
-//                                .splineTo(new Vector2d(0,0),Math.toRadians(180))
-//                                .build()
-//                );
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Required: Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(DriveConstants.MAX_VEL, DriveConstants.MAX_ACCEL, DriveConstants.MAX_ANG_VEL, DriveConstants.MAX_ANG_ACCEL, DriveConstants.TRACK_WIDTH)
                 // Option: Set theme. Default = ColorSchemeRedDark()
                 .setColorScheme(new ColorSchemeRedDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(14.783464, 62.73622, Math.toRadians(270)))
-                                .lineTo(new Vector2d(14, 33))
-                                .lineToLinearHeading(new Pose2d(new Vector2d(52, 34), Math.toRadians(180)))
-                                .splineTo(new Vector2d(10,59),Math.toRadians(180))
-                                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 59), Math.toRadians(180)))
-                                .splineTo(new Vector2d(-52,45),Math.toRadians(235))
-                                .lineTo(new Vector2d(-54,42.14))
-                                .setReversed(true)
-                                .splineTo(new Vector2d(-30,58),Math.toRadians(0))
-                                .lineToSplineHeading(new Pose2d(new Vector2d(10,58),Math.toRadians(180)))
-                                .splineTo(new Vector2d(52,40),Math.toRadians(0))
+                        drive.trajectorySequenceBuilder(new Pose2d(14.783464, -62.73622, Math.toRadians(270)))
+                                .lineToLinearHeading(new Pose2d(new Vector2d(-54,-37),Math.toRadians(135)))
                                 .build()
                 );
 

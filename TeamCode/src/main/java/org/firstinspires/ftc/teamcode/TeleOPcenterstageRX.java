@@ -133,9 +133,9 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+                pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
                 c.setLedPattern(pattern);
-                if (gamepad2.dpad_up && gamepad2.left_trigger > 0) {
+                if ((gamepad2.dpad_up && gamepad2.left_trigger > 0)||gamepad1.right_bumper) {
                     lastTime = System.currentTimeMillis();
                     c.setPlauncherPosition(0.5);
                     aLansat = true;
@@ -172,7 +172,6 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-
                 c.setSliderPower(gamepad2.right_stick_y);
                 if(gamepad2.dpad_up && gamepad2.right_trigger > 0){
                     c.melctarget(1.6,1300,10000);
@@ -261,8 +260,6 @@ public class TeleOPcenterstageRX extends OpMode {
         telemetry.addData("gamepad2.b:", gamepad2.b);
         telemetry.addData("pozitiebrat:", c.getPotentiometruVoltage());
         telemetry.addData("pozitiebratencoder:",c.getMelcJosPosition());
-        telemetry.addData("distanceL:", c.getDistanceL(DistanceUnit.CM));
-        telemetry.addData("distanceR:", c.getDistanceR(DistanceUnit.CM));
         telemetry.addData("ghearaL:",c.getGhearaLPosition());
         telemetry.addData("ghearaR:",c.getGhearaRPosition());
         telemetry.addData("getBratAngle:",c.getCurrentPotentiometruAngle());

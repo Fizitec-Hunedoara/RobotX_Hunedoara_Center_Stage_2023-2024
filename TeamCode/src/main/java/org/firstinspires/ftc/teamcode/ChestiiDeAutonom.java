@@ -59,8 +59,8 @@ public class ChestiiDeAutonom{
         sasiuInited = shouldInitSasiu;
 
         potentiometru = hard.get(AnalogInput.class, "potentiometru");
-        distanceL = hard.get(DistanceSensor.class, "distanceL");
-        distanceR = hard.get(DistanceSensor.class, "distanceR");
+        //distanceL = hard.get(DistanceSensor.class, "distanceL");
+        //distanceR = hard.get(DistanceSensor.class, "distanceR");
         led = hard.get(RevBlinkinLedDriver.class,"led");
 
         melcjos = hard.get(DcMotorEx.class, "melcjos");
@@ -387,7 +387,23 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
         melcsus.setVelocity(0);
     }
-
+    public void melctargetRealAngleAdaptive(double angle, double pow, double t) {
+        double lastTime = System.currentTimeMillis();
+        if (getCurrentPotentiometruAngle() < angle) {
+            melcsus.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
+            melcjos.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        else {
+            melcsus.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
+            melcjos.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            }
+        }
+        melcjos.setVelocity(0);
+        melcsus.setVelocity(0);
+    }
     public void melctargettolerance(double poz, double vel, double t, double tolerance) {
         double lastTime = System.currentTimeMillis();
         if (getPotentiometruVoltage() > poz) {
@@ -429,14 +445,20 @@ public class ChestiiDeAutonom{
         melcjos.setVelocity(0);
     }
     public void pixel_advance(){
-            melctargetRealAngle(440,1500,10000);
+            melctargetRealAngle(440,1500,3000);
             target(-1120, 2000, getSlider(), 3000, 20);
-            melctargetRealAngle(417, 1500, 10000);
+            melctargetRealAngle(424, 1500, 3000);
             setMacetaPower(-1);
     }
+    public void pixel_advance_1(){
+        melctargetRealAngle(440,1500,3000);
+        target(-1120, 2000, getSlider(), 3000, 20);
+        melctargetRealAngle(427,1500,3000);
+        setMacetaPower(-1);
+    }
     public void pixel_retreat(){
-        melctargetRealAngle(425,1500,10000);
-        target(0, 2000, getSlider(), 3000, 20);
+        melctargetRealAngle(425,1500,3000);
+        target(-70, 2000, getSlider(), 3000, 20);
         setMacetaPower(0);
     }
     public synchronized void setPlauncherPosition(double position) {
