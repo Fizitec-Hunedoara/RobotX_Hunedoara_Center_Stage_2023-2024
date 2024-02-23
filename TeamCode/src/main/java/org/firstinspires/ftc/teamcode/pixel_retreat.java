@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class pixel_retreat extends OpMode {
     public boolean stop=false;
     public double melcpoz = 0;
-    ChestiiDeAutonom c = new ChestiiDeAutonom();
+    ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     double velo;
     Pid_Controller_Adevarat pid = new Pid_Controller_Adevarat(0,0,0);
     @Override
@@ -33,16 +33,16 @@ public class pixel_retreat extends OpMode {
     }
     private final Thread Sistem = new Thread(() -> {
         while (!stop) {
-            c.setMelcPower(gamepad2.right_stick_y);
-            c.setSliderVelocity(1000*gamepad2.left_stick_y);
-            if(gamepad2.right_bumper){
-                pid = new Pid_Controller_Adevarat(configPID.p, configPID.i, configPID.d);
-                pid.enable();
-                while(!stop&&!gamepad2.left_bumper) {
-                    pid.setPID(configPID.p,configPID.i,configPID.d,configPID.f * sin(517.8 - c.getCurrentPotentiometruAngle()));
-                    pid.setSetpoint(configPID.targetPoz);
-                    velo = pid.performPID(c.getCurrentPotentiometruAngle());
-                    c.setMelcPower(-velo);
+//            c.setMelcPower(gamepad2.right_stick_y);
+//            c.setSliderVelocity(1000*gamepad2.left_stick_y);
+//            if(gamepad2.right_bumper){
+//                pid = new Pid_Controller_Adevarat(configPID.p, configPID.i, configPID.d);
+//                pid.enable();
+//                while(!stop&&!gamepad2.left_bumper) {
+//                    pid.setPID(configPID.p,configPID.i,configPID.d,configPID.f * sin(517.8 - c.getCurrentPotentiometruAngle()));
+//                    pid.setSetpoint(configPID.targetPoz);
+//                    velo = pid.performPID(c.getCurrentPotentiometruAngle());
+//                    c.setMelcPower(-velo);
 
 //                    c.setMelcPIDFCoefficients(configPID.kp,configPID.ki,configPID.kd,configPID.kf);
 //                    melcpoz = 520;
@@ -52,8 +52,8 @@ public class pixel_retreat extends OpMode {
 //                    c.kdf(100);
 //                    c.setMelcPIDFCoefficients(configPID.kp,configPID.ki,configPID.kd,configPID.kf);
 //                    c.melctarget(450, configPID.vel, 4000);
-                }
-            }
+               // }
+           // }
         }
     });
     @Override

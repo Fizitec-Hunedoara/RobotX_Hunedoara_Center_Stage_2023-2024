@@ -21,6 +21,8 @@ import static org.firstinspires.ftc.teamcode.Var_Red.CV_rect_y2;
 import static org.firstinspires.ftc.teamcode.Var_Red.n;
 import static org.opencv.core.CvType.CV_8UC1;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -42,10 +44,14 @@ public class PachetelNouRosu extends OpenCvPipeline {
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
     private Rect dreptunghi;
     List<MatOfPoint> contours = new ArrayList<>();
+    LinearOpMode opMode;
     private Mat element, original, rect, input;
     {
         element = Imgproc.getStructuringElement(elementType, new Size(2 * Var_Blue.CV_kernel_pult_size + 1, 2 * Var_Blue.CV_kernel_pult_size + 1),
                 new Point(Var_Blue.CV_kernel_pult_size, Var_Blue.CV_kernel_pult_size));
+    }
+    public PachetelNouRosu(LinearOpMode opMode){
+        this.opMode = opMode;
     }
     /*
      * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is

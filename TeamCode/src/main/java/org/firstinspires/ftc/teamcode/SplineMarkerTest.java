@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class SplineMarkerTest extends LinearOpMode {
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);

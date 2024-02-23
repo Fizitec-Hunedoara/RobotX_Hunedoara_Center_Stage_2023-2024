@@ -25,8 +25,10 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Line;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -47,6 +49,7 @@ public class PachetelNouOpenCV extends OpenCvPipeline {
     private final int elementType = Imgproc.CV_SHAPE_RECT;
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
     private Rect dreptunghi;
+    public LinearOpMode opMode;
     /*
      * NOTE: if you wish to use additional Mat objects in your processing pipeline, it is
      * highly recommended to declare them here as instance variables and re-use them for
@@ -55,7 +58,9 @@ public class PachetelNouOpenCV extends OpenCvPipeline {
      * by forgetting to call mat.release(), and it also reduces memory pressure by not
      * constantly allocating and freeing large chunks of memory.
      */
-
+    public PachetelNouOpenCV(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
     @Override
     //mat = foaie de desen pentru webcam
     public Mat processFrame(Mat in) {

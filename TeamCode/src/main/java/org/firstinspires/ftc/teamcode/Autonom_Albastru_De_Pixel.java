@@ -21,8 +21,8 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
     boolean outOfThread = false;
     int varrez = 2,poz2=100;
     public OpenCvCamera webcam;
-    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
             c.init(hardwareMap);
@@ -123,15 +123,20 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             c.deschidere();
             c.kdf(600);
             if (!isStopRequested()) {
+                c.inchidere();
                 Brat_jos.start();
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(33,10),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(-20,10),Math.toRadians(180)))
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.pixel_advance();
+                    }).start())
                     .lineToLinearHeading(new Pose2d(new Vector2d(-43, 10), Math.toRadians(180)))
                     .build();
             if (!isStopRequested()) {
                 drive.followTrajectorySequence(ts);
-                c.inchidere();
+                c.kdf(700);
                 c.pixel_retreat();
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())

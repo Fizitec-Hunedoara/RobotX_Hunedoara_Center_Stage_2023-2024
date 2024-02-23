@@ -20,8 +20,8 @@ public class Autonom_Stack_Albastru_Spate extends LinearOpMode {
     double rectx, recty, hperw,x;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);

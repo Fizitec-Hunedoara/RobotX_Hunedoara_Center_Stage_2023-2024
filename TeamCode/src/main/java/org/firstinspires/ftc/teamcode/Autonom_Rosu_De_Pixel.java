@@ -22,8 +22,8 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
     boolean outOfThread = false;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouRosu pipelineRosu = new PachetelNouRosu();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouRosu pipelineRosu = new PachetelNouRosu(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
@@ -131,13 +131,18 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         c.deschidere();
         c.kdf(600);
+        c.inchidere();
         Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(new Vector2d(33,-11),Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(new Vector2d(-43,-11),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-20,-11),Math.toRadians(180)))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.pixel_advance();
+                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(-47,-11),Math.toRadians(180)))
                 .build();
         drive.followTrajectorySequence(ts);
-        c.inchidere();
+        c.kdf(700);
         c.pixel_retreat();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(30,-10))

@@ -21,6 +21,8 @@ import static org.firstinspires.ftc.teamcode.Var_Blue.CV_rect_y2;
 import static org.firstinspires.ftc.teamcode.Var_Red.n;
 import static org.opencv.core.CvType.CV_8UC1;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -42,6 +44,10 @@ public class PachetelNouAlbastru extends OpenCvPipeline {
     //asta e un dreptunghi(Rect = dreptunghi pentru webcam)
     List<MatOfPoint> contours = new ArrayList<>();
     private Rect dreptunghi;
+    public LinearOpMode opMode;
+    public PachetelNouAlbastru(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
     private Mat element, original, rect, input;
     {
         element = Imgproc.getStructuringElement(elementType, new Size(2 * CV_kernel_pult_size + 1, 2 * CV_kernel_pult_size + 1),

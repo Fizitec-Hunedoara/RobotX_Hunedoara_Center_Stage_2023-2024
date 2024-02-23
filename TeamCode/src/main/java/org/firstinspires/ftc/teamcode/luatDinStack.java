@@ -12,8 +12,8 @@ public class luatDinStack extends LinearOpMode {
     public DcMotorEx motorBR,motorBL,motorFR,motorFL;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouAlbastru pipelineRosu = new PachetelNouAlbastru();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouAlbastru pipelineRosu = new PachetelNouAlbastru(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);

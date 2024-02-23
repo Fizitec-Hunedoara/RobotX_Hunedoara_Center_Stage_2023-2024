@@ -34,7 +34,7 @@ public class apriltagtest extends LinearOpMode {
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     Pid_Controller_Adevarat pid = new Pid_Controller_Adevarat(pcam, icam, dcam);
-    ChestiiDeAutonom c = new ChestiiDeAutonom();
+    ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     double pidRes;
 
     public void initAprilTag() {

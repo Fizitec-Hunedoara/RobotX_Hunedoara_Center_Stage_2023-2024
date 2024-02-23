@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,7 +46,12 @@ public class ChestiiDeAutonom{
     private DistanceSensor distanceL, distanceR;
     private RevBlinkinLedDriver led;
     private boolean sasiuInited;
-    private boolean isStopRequested = false;
+    LinearOpMode opMode;
+    OpMode teleOp;
+    public ChestiiDeAutonom(OpMode teleOp){this.teleOp = teleOp;}
+    public ChestiiDeAutonom(LinearOpMode opMode){
+        this.opMode = opMode;
+    }
     public void init(HardwareMap hard){
         this.init(hard, null, false);
     }
@@ -59,9 +65,8 @@ public class ChestiiDeAutonom{
         sasiuInited = shouldInitSasiu;
 
         potentiometru = hard.get(AnalogInput.class, "potentiometru");
-        //distanceL = hard.get(DistanceSensor.class, "distanceL");
-        //distanceR = hard.get(DistanceSensor.class, "distanceR");
-        led = hard.get(RevBlinkinLedDriver.class,"led");
+
+        led = hard.get(RevBlinkinLedDriver.class, "led");
 
         melcjos = hard.get(DcMotorEx.class, "melcjos");
         melcsus = hard.get(DcMotorEx.class, "melcsus");
@@ -89,10 +94,9 @@ public class ChestiiDeAutonom{
         melcjos.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         melcsus.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
 
-    public void stop(){
-        this.isStopRequested = true;
+        //distanceL = hard.get(DistanceSensor.class, "distanceL");
+        //distanceR = hard.get(DistanceSensor.class, "distanceR");
     }
 
     public void initSasiu(HardwareMap hard) {
@@ -150,7 +154,7 @@ public class ChestiiDeAutonom{
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
-            while (!isStopRequested && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+            while (this.opMode.opModeIsActive() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
                 kdf(20);
             }
             telemetry.addData("Camera", "Ready");
@@ -158,7 +162,7 @@ public class ChestiiDeAutonom{
         }
 
         // Set camera controls unless we are stopping.
-        if (!isStopRequested) {
+        if (this.opMode.opModeIsActive()) {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
@@ -237,7 +241,7 @@ public class ChestiiDeAutonom{
             motor.setVelocity(-vel);
         }
         double lastTime = System.currentTimeMillis();
-        while (!isStopRequested
+        while (this.opMode.opModeIsActive()
                 && lastTime + t > System.currentTimeMillis()
                 && (abs(motor.getCurrentPosition() - poz) > tolerance)) {
         }
@@ -292,9 +296,6 @@ public class ChestiiDeAutonom{
         return slider;
     }
     public int getMelcJosPosition(){return melcjos.getCurrentPosition();}
-    public void setIsStopRequested(boolean value){
-        isStopRequested = value;
-    }
 
     public void setExtensorPower(double pow, int t) {
         long lastTime = System.currentTimeMillis();
@@ -306,7 +307,7 @@ public class ChestiiDeAutonom{
         extensorR.setPower(0);
     }
 
-    public synchronized void setMelcPower(double melcPower) {
+    public synchronized void setMelcPower(float melcPower) {
         melcsus.setPower(melcPower);
         melcjos.setPower(melcPower);
     }
@@ -357,31 +358,30 @@ public class ChestiiDeAutonom{
         if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getPotentiometruVoltage() > poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() > poz && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getPotentiometruVoltage() < poz && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() < poz && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         melcjos.setVelocity(0);
         melcsus.setVelocity(0);
     }
-
     public void melctargetRealAngle(double angle, double vel, double t) {
         double lastTime = System.currentTimeMillis();
         if (getCurrentPotentiometruAngle() < angle) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         melcjos.setVelocity(0);
@@ -392,13 +392,13 @@ public class ChestiiDeAutonom{
         if (getCurrentPotentiometruAngle() < angle) {
             melcsus.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
             melcjos.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
-            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         else {
             melcsus.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
             melcjos.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
-            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         melcjos.setVelocity(0);
@@ -409,13 +409,13 @@ public class ChestiiDeAutonom{
         if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getPotentiometruVoltage() > poz + tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() > poz + tolerance && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getPotentiometruVoltage() < poz - tolerance && lastTime + t > System.currentTimeMillis() && !isStopRequested) {
+            while (getPotentiometruVoltage() < poz - tolerance && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
             }
         }
         melcjos.setVelocity(0);
@@ -437,7 +437,7 @@ public class ChestiiDeAutonom{
             melcsus.setVelocity(-vel);
         }
         double lastTime = System.currentTimeMillis();
-        while (!isStopRequested
+        while (this.opMode.opModeIsActive()
                 && lastTime + t > System.currentTimeMillis()
                 && (abs(melcjos.getCurrentPosition() - poz) > tolerance)) {
             Log.wtf("pozitie:",Integer.toString(melcjos.getCurrentPosition()));}
@@ -453,11 +453,11 @@ public class ChestiiDeAutonom{
     public void pixel_advance_1(){
         melctargetRealAngle(440,1500,3000);
         target(-1120, 2000, getSlider(), 3000, 20);
-        melctargetRealAngle(427,1500,3000);
+        melctargetRealAngle(432,1500,3000);
         setMacetaPower(-1);
     }
     public void pixel_retreat(){
-        melctargetRealAngle(425,1500,3000);
+        melctargetRealAngle(435,1500,3000);
         target(-70, 2000, getSlider(), 3000, 20);
         setMacetaPower(0);
     }

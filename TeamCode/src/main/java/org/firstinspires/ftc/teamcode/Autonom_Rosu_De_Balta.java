@@ -24,8 +24,8 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
     boolean outOfThread = false;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouRosu pipelineRosu = new PachetelNouRosu();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouRosu pipelineRosu = new PachetelNouRosu(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);

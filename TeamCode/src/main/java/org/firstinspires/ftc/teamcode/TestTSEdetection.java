@@ -18,7 +18,7 @@ public class TestTSEdetection extends LinearOpMode {
     double rectx, recty, hperw;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouRosu pipelineRed = new PachetelNouRosu();
+    public PachetelNouRosu pipelineRed = new PachetelNouRosu(this);
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);

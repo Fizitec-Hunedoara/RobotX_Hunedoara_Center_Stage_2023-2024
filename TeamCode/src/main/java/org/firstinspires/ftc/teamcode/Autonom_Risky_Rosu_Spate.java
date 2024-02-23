@@ -23,8 +23,8 @@ public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
     double rectx, recty, hperw, x;
     int varrez = 2;
     public OpenCvCamera webcam;
-    public PachetelNouRosu pipelineRosu = new PachetelNouRosu();
-    public ChestiiDeAutonom c = new ChestiiDeAutonom();
+    public PachetelNouRosu pipelineRosu = new PachetelNouRosu(this);
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -146,7 +146,7 @@ public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
         if (varrez == 1) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(20, -6),Math.toRadians(180)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53, -33),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53, -31),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);

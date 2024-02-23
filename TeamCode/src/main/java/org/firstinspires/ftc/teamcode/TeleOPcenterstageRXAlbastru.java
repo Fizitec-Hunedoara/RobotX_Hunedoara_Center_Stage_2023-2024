@@ -2,7 +2,6 @@
 De asemenea, daca ceva da eroare in cod si nu stii de ce, verifica mai intai daca este importata chestia sau nu.
  */
 package org.firstinspires.ftc.teamcode;
-import java.util.Random;
 import static java.lang.Math.abs;
 
 import android.util.Log;
@@ -13,14 +12,10 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
-public class TeleOPcenterstageRX extends OpMode {
+public class TeleOPcenterstageRXAlbastru extends OpMode {
     private RevBlinkinLedDriver.BlinkinPattern pattern;
     private double sm = 1, smm =1;
     private boolean lastx = false, lasty = false;
@@ -30,9 +25,8 @@ public class TeleOPcenterstageRX extends OpMode {
     private double lastTime;
     private double pmotorBL, pmotorBR, pmotorFL, pmotorFR;
     private boolean stop = false, aLansat = false, notEntered, aRetras = false, aIntrat = false,aInchis = false;
-    private final ChestiiDeAutonom c = new ChestiiDeAutonom();
+    private final ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     public OpenCvCamera webcam;
-    public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru();
     public long lastDeschidereTimestamp, inchidereDelay = 500;
     private boolean rightBumperLast;
 
@@ -133,7 +127,7 @@ public class TeleOPcenterstageRX extends OpMode {
         @Override
         public void run() {
             while (!stop) {
-                pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+                pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
                 c.setLedPattern(pattern);
                 if ((gamepad2.dpad_up && gamepad2.left_trigger > 0)||gamepad1.right_bumper) {
                     lastTime = System.currentTimeMillis();
@@ -240,7 +234,6 @@ public class TeleOPcenterstageRX extends OpMode {
 
     public void stop() {
         stop = true;
-        c.setIsStopRequested(true);
     }
 
     @Override
