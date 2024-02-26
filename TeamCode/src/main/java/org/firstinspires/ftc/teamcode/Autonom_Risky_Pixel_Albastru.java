@@ -223,7 +223,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             if(!isStopRequested()) {
                 c.inchidere();
                 c.kdf(500);
-                c.melctarget(2.3, 1300, 3000);
+                c.melctarget(2.2, 1300, 3000);
             }
         }
     });

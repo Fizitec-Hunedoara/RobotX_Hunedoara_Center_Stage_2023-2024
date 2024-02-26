@@ -128,6 +128,7 @@ public class Autonom_Albastru_De_Balta_Spate extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
+
         c.melctarget(0.85, 3000, 4000);
         c.setMacetaPower(0);
         c.target(-800, 1300, c.getSlider(), 3000, 10);
@@ -135,6 +136,7 @@ public class Autonom_Albastru_De_Balta_Spate extends LinearOpMode {
         c.target(-300, 1300, c.getSlider(), 5000, 10);
         c.deschidere();
         c.kdf(500);
+        c.inchidere();
         c.melctarget(2.3, 3000, 3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47, 40))

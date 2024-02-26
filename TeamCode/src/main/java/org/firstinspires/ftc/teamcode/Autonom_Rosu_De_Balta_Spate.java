@@ -155,6 +155,7 @@ public class Autonom_Rosu_De_Balta_Spate extends LinearOpMode {
         c.target(-300,1300,c.getSlider(),5000,10);
         c.deschidere();
         c.kdf(500);
+        c.inchidere();
         c.melctarget(2.3,1300,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47,-41))

@@ -81,22 +81,45 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(new Vector2d(15, 37),Math.toRadians(315)))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.kdf(1500);
+                    c.melctarget(0.8, 1300, 3000);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(300);
+                    c.target(-300, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(500);
+                }).start())
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineTo(new Vector2d(14, 33))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.kdf(1500);
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         else if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,48),Math.toRadians(230)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(10,34),Math.toRadians(200)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.kdf(1500);
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, 29),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, 28.5),Math.toRadians(180)))
                 .build();
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -157,6 +180,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
     private final Thread Brat_stop = new Thread(new Runnable() {
         @Override
         public void run() {
+            c.inchidere();
             c.kdf(500);
             c.melctarget(2.3,1300,3000);
         }

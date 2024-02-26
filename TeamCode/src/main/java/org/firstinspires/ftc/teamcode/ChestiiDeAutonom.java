@@ -45,10 +45,9 @@ public class ChestiiDeAutonom{
     private AnalogInput potentiometru;
     private DistanceSensor distanceL, distanceR;
     private RevBlinkinLedDriver led;
-    private boolean sasiuInited;
+    private boolean sasiuInited,isTeleOp = false;
     LinearOpMode opMode;
-    OpMode teleOp;
-    public ChestiiDeAutonom(OpMode teleOp){this.teleOp = teleOp;}
+    public ChestiiDeAutonom(){ isTeleOp = true; this.opMode = null; }
     public ChestiiDeAutonom(LinearOpMode opMode){
         this.opMode = opMode;
     }
@@ -154,7 +153,7 @@ public class ChestiiDeAutonom{
         if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             telemetry.addData("Camera", "Waiting");
             telemetry.update();
-            while (this.opMode.opModeIsActive() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+            while ((this.opMode.opModeIsActive()||isTeleOp) && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
                 kdf(20);
             }
             telemetry.addData("Camera", "Ready");
@@ -162,7 +161,7 @@ public class ChestiiDeAutonom{
         }
 
         // Set camera controls unless we are stopping.
-        if (this.opMode.opModeIsActive()) {
+        if (this.opMode.opModeIsActive() || isTeleOp) {
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
@@ -240,8 +239,9 @@ public class ChestiiDeAutonom{
         else {
             motor.setVelocity(-vel);
         }
+
         double lastTime = System.currentTimeMillis();
-        while (this.opMode.opModeIsActive()
+        while ((this.opMode.opModeIsActive()||isTeleOp)
                 && lastTime + t > System.currentTimeMillis()
                 && (abs(motor.getCurrentPosition() - poz) > tolerance)) {
         }
@@ -358,13 +358,13 @@ public class ChestiiDeAutonom{
         if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getPotentiometruVoltage() > poz && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getPotentiometruVoltage() > poz && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getPotentiometruVoltage() < poz && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getPotentiometruVoltage() < poz && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         melcjos.setVelocity(0);
@@ -375,13 +375,13 @@ public class ChestiiDeAutonom{
         if (getCurrentPotentiometruAngle() < angle) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive()||isTeleOp)) {
             }
         }
         melcjos.setVelocity(0);
@@ -392,13 +392,13 @@ public class ChestiiDeAutonom{
         if (getCurrentPotentiometruAngle() < angle) {
             melcsus.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
             melcjos.setVelocity(-1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
-            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         else {
             melcsus.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
             melcjos.setVelocity(1 / abs(getCurrentPotentiometruAngle()-angle) * pow);
-            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         melcjos.setVelocity(0);
@@ -409,13 +409,13 @@ public class ChestiiDeAutonom{
         if (getPotentiometruVoltage() > poz) {
             melcsus.setVelocity(-vel);
             melcjos.setVelocity(-vel);
-            while (getPotentiometruVoltage() > poz + tolerance && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getPotentiometruVoltage() > poz + tolerance && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         else {
             melcsus.setVelocity(vel);
             melcjos.setVelocity(vel);
-            while (getPotentiometruVoltage() < poz - tolerance && lastTime + t > System.currentTimeMillis() && this.opMode.opModeIsActive()) {
+            while (getPotentiometruVoltage() < poz - tolerance && lastTime + t > System.currentTimeMillis() && (this.opMode.opModeIsActive() || isTeleOp)) {
             }
         }
         melcjos.setVelocity(0);
@@ -437,15 +437,15 @@ public class ChestiiDeAutonom{
             melcsus.setVelocity(-vel);
         }
         double lastTime = System.currentTimeMillis();
-        while (this.opMode.opModeIsActive()
+        while ((this.opMode.opModeIsActive()||isTeleOp)
                 && lastTime + t > System.currentTimeMillis()
-                && (abs(melcjos.getCurrentPosition() - poz) > tolerance)) {
+                && (abs(melcjos.getCurrentPosition() - poz) > tolerance)){
             Log.wtf("pozitie:",Integer.toString(melcjos.getCurrentPosition()));}
         melcsus.setVelocity(0);
         melcjos.setVelocity(0);
     }
     public void pixel_advance(){
-            melctargetRealAngle(440,1500,3000);
+            melctargetRealAngle(440, 1500, 3000);
             target(-1120, 2000, getSlider(), 3000, 20);
             melctargetRealAngle(424, 1500, 3000);
             setMacetaPower(-1);

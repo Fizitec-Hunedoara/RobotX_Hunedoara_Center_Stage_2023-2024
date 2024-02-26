@@ -144,7 +144,7 @@ public class Autonom_Risky_Albastru_Spate extends LinearOpMode {
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(20, 6),Math.toRadians(180)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53, 36),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53, 36.5),Math.toRadians(180)))
                     .build();
         }
         if (varrez == 3) {
@@ -165,11 +165,11 @@ public class Autonom_Risky_Albastru_Spate extends LinearOpMode {
         }
         c.inchidere();
         c.melctarget(2.3, 3000, 3000);
-        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+        /*ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47, 40))
                 .lineTo(new Vector2d(47, 10))
                 .lineTo(new Vector2d(62, 10))
                 .build();
-        drive.followTrajectorySequence(ts);
+        drive.followTrajectorySequence(ts);*/
     }
 }

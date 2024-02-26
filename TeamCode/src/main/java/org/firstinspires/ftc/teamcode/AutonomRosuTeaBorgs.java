@@ -19,7 +19,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class Autonom_Rosu_De_Balta extends LinearOpMode {
+public class AutonomRosuTeaBorgs extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
     int varrez = 2;
@@ -78,17 +78,18 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Pose2d startPose = new Pose2d(14.783464, -62.73622, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
+        c.kdf(12000);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16, -38),Math.toRadians(45)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
-                        c.melctarget(0.8, 1300, 3000);
-                        c.target(-800, 1300, c.getSlider(), 3000, 10);
-                        c.kdf(300);
-                        c.target(-300, 1300, c.getSlider(), 3000, 10);
-                        c.kdf(500);
-                    }).start())
-                    .build();
+                .lineToLinearHeading(new Pose2d(new Vector2d(16, -38),Math.toRadians(45)))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.kdf(1500);
+                    c.melctarget(0.8, 1300, 3000);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(300);
+                    c.target(-300, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(500);
+                }).start())
+                .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(14, -34),Math.toRadians(90)))

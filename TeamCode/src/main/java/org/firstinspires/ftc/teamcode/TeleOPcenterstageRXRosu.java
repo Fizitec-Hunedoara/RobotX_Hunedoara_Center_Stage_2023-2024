@@ -25,11 +25,24 @@ public class TeleOPcenterstageRXRosu extends OpMode {
     private double lastTime;
     private double pmotorBL, pmotorBR, pmotorFL, pmotorFR;
     private boolean stop = false, aLansat = false, notEntered, aRetras = false, aIntrat = false,aInchis = false;
-    private final ChestiiDeAutonom c = new ChestiiDeAutonom(this);
+    private final ChestiiDeAutonom c = new ChestiiDeAutonom();
     public OpenCvCamera webcam;
     public long lastDeschidereTimestamp, inchidereDelay = 500;
     private boolean rightBumperLast;
-
+    public void melctargetRealAngle(double angle, double vel, double t) {
+        double lastTime = System.currentTimeMillis();
+        if (c.getCurrentPotentiometruAngle() < angle) {
+            c.setMelcVelocity(-vel);
+            while (c.getCurrentPotentiometruAngle() < angle && lastTime + t > System.currentTimeMillis()) {
+            }
+        }
+        else {
+            c.setMelcVelocity(vel);
+            while (c.getCurrentPotentiometruAngle() > angle && lastTime + t > System.currentTimeMillis()) {
+            }
+        }
+        c.setMelcVelocity(0);
+    }
     private enum OuttakeState{
         INCHIS,
         ONE_PIXEL,
@@ -168,7 +181,7 @@ public class TeleOPcenterstageRXRosu extends OpMode {
             while (!stop) {
                 c.setSliderPower(gamepad2.right_stick_y);
                 if(gamepad2.dpad_up && gamepad2.right_trigger > 0){
-                    c.melctarget(1.6,1300,10000);
+                    melctargetRealAngle(470,1300,10000);
                 }
                 else {
                     //c.setMelcPower(-gamepad2.left_stick_y/smm);
