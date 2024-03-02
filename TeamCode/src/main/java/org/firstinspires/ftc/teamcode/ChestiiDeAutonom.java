@@ -475,14 +475,14 @@ public class ChestiiDeAutonom{
         return melcjos.getPIDFCoefficients(melcjos.getMode());
     }
     public void operation_pixel(){
-        setIntakeinatorPosition(0.4,0.4);
-        target(-600,1000,getSlider(),3000,20);
-        melctargetRealAngle(420,1200,3000);
-        setMacetaPower(1);
+        setIntakeinatorPosition(0.24,0.4);
+        target(-660,1000,getSlider(),3000,20);
+        melctargetRealAngle(417,1200,3000);
         setMacetaPower(-1);
-        target(-700,1000,getSlider(),3000,5);
+        target(-740,1000,getSlider(),3000,5);
         kdf(500);
-        setIntakeinatorPosition(0,0);
+        setIntakeinatorPosition(0.08,0.6);
+        kdf(500);
     }
     public void kdf(long t) {
         long lastTime = System.currentTimeMillis();
