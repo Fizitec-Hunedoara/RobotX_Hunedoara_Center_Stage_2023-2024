@@ -38,7 +38,7 @@ public class ChestiiDeAutonom{
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private DcMotorEx melcsus, melcjos, slider, motorBL, motorBR, motorFL, motorFR;
-    private ServoImplEx ghearaR, ghearaL, plauncher, intakeinatorStanga, intakeinatorDreapta;
+    private ServoImplEx ghearaR, ghearaL, plauncher, intakeinatorDreapta;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private CRServo maceta, extensorL, extensorR;
@@ -74,7 +74,6 @@ public class ChestiiDeAutonom{
         ghearaL = hard.get(ServoImplEx.class, "gherutaL");
         ghearaR = hard.get(ServoImplEx.class, "gherutaR");
         plauncher = hard.get(ServoImplEx.class, "plauncher");
-        intakeinatorStanga = hard.get(ServoImplEx.class, "intakeinatorStanga");
         intakeinatorDreapta = hard.get(ServoImplEx.class, "intakeinatorDreapta");
 
         maceta = hard.get(CRServo.class, "maceta");
@@ -276,11 +275,9 @@ public class ChestiiDeAutonom{
     public double getMacetaPower() {
         return maceta.getPower();
     }
-    public double getIntakeinatorStangaPosition(){return intakeinatorStanga.getPosition();}
     public double getIntakeinatorDreaptaPosition(){return intakeinatorDreapta.getPosition();}
-    public void setIntakeinatorPosition(double positionStanga,double positionDreapta){
+    public void setIntakeinatorPosition(double positionDreapta){
         intakeinatorDreapta.setPosition(positionDreapta);
-        intakeinatorStanga.setPosition(positionStanga);
     }
     public void setMelcPIDFCoefficients(double kp, double ki, double kd, double kf){
         melcsus.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(kp,ki,kd,kf));
@@ -475,13 +472,12 @@ public class ChestiiDeAutonom{
         return melcjos.getPIDFCoefficients(melcjos.getMode());
     }
     public void operation_pixel(){
-        setIntakeinatorPosition(0.24,0.4);
-        target(-660,1000,getSlider(),3000,20);
-        melctargetRealAngle(417,1200,3000);
-        setMacetaPower(-1);
+        setIntakeinatorPosition(0.13);
+        target(-630,1000,getSlider(),3000,20);
+        melctargetRealAngle(420,1200,3000);
         target(-740,1000,getSlider(),3000,5);
         kdf(500);
-        setIntakeinatorPosition(0.08,0.6);
+        setIntakeinatorPosition(0.6);
         kdf(500);
     }
     public void kdf(long t) {

@@ -84,14 +84,14 @@ public class intakeTest extends OpMode {
         public void run() {
             while (!stop) {
                 if(gamepad2.y){
-                    c.setIntakeinatorPosition(0.24,0.4);
-                    c.target(-640,1000,c.getSlider(),3000,20);
+                    c.setIntakeinatorPosition(0.4);
+                    c.target(-630,1000,c.getSlider(),3000,20);
                     c.melctargetRealAngle(420,1200,3000);
                     c.setMacetaPower(1);
                     c.setMacetaPower(-1);
                     c.target(-740,1000,c.getSlider(),3000,5);
                     c.kdf(500);
-                    c.setIntakeinatorPosition(0.08,0.6);
+                    c.setIntakeinatorPosition(0.6);
                     c.kdf(1500);
                 }
                 if(gamepad2.dpad_left && intakeinatorPoz > 0){
@@ -106,7 +106,7 @@ public class intakeTest extends OpMode {
                 if(gamepad2.dpad_up && intakeinatorPoz2 < 1){
                     intakeinatorPoz2 += 0.001;
                 }
-                c.setIntakeinatorPosition(intakeinatorPoz,intakeinatorPoz2);
+                c.setIntakeinatorPosition(intakeinatorPoz2);
                 c.setSliderPower(gamepad2.right_stick_y);
                 if (xLast != gamepad2.x) {
                     if (outtakeState == OuttakeState.INCHIS) {
@@ -159,7 +159,6 @@ public class intakeTest extends OpMode {
         telemetry.addData("ghearaL:",c.getGhearaLPosition());
         telemetry.addData("ghearaR:",c.getGhearaRPosition());
         telemetry.addData("getBratAngle:",c.getCurrentPotentiometruAngle());
-        telemetry.addData("intakeinator stanga:",c.getIntakeinatorStangaPosition());
         telemetry.addData("intakeinator dreapta:",c.getIntakeinatorDreaptaPosition());
         telemetry.addData("automatizare",aInchis);
         telemetry.update();

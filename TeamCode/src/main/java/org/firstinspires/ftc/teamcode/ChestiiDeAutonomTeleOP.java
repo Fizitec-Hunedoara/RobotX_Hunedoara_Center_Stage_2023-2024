@@ -38,7 +38,7 @@ public class ChestiiDeAutonomTeleOP{
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private DcMotorEx melcsus, melcjos, slider, motorBL, motorBR, motorFL, motorFR;
-    private ServoImplEx ghearaR, ghearaL, plauncher, intakeinatorStanga, intakeinatorDreapta;
+    private ServoImplEx ghearaR, ghearaL, plauncher, intakeinatorDreapta;
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     private CRServo maceta, extensorL, extensorR;
@@ -71,7 +71,6 @@ public class ChestiiDeAutonomTeleOP{
         ghearaL = hard.get(ServoImplEx.class, "gherutaL");
         ghearaR = hard.get(ServoImplEx.class, "gherutaR");
         plauncher = hard.get(ServoImplEx.class, "plauncher");
-        intakeinatorStanga = hard.get(ServoImplEx.class, "intakeinatorStanga");
         intakeinatorDreapta = hard.get(ServoImplEx.class, "intakeinatorDreapta");
 
         maceta = hard.get(CRServo.class, "maceta");
@@ -270,11 +269,9 @@ public class ChestiiDeAutonomTeleOP{
     public double getMacetaPower() {
         return maceta.getPower();
     }
-    public double getIntakeinatorStangaPosition(){return intakeinatorStanga.getPosition();}
     public double getIntakeinatorDreaptaPosition(){return intakeinatorDreapta.getPosition();}
-    public void setIntakeinatorPosition(double positionStanga,double positionDreapta){
+    public void setIntakeinatorPosition(double positionDreapta){
         intakeinatorDreapta.setPosition(positionDreapta);
-        intakeinatorStanga.setPosition(positionStanga);
     }
     public void setMelcPIDFCoefficients(double kp, double ki, double kd, double kf){
         melcsus.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER,new PIDFCoefficients(kp,ki,kd,kf));

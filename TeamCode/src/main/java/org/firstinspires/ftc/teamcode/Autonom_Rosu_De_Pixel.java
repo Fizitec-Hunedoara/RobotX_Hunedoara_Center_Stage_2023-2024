@@ -135,19 +135,31 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         c.inchidere();
         Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.inchidere();
+                    c.kdf(500);
+                    c.melctarget(2.05,1300,3000);
+                }).start())
                 .lineToLinearHeading(new Pose2d(new Vector2d(33,-11),Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_pixel();
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(-47,-11),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-52,-11),Math.toRadians(180)))
                 .build();
         drive.followTrajectorySequence(ts);
         c.kdf(700);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(30,-10))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.melctarget(0.9, 1300, 3000);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(300);
+                    c.target(-200, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(500);
+                    c.setExtensorPower(-1,2000);
+                }).start())
                 .build();
         drive.followTrajectorySequence(ts);
-        Pus_pe_tabla.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(52.5,-34))
                 .build();
@@ -163,8 +175,10 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         }
         drive.followTrajectorySequence(ts);
         c.kdf(1000);
-        c.deschidere();
-        c.kdf(500);
+        long lastTime = System.currentTimeMillis();
+        while(lastTime + 500 > System.currentTimeMillis()) {
+            c.deschidere();
+        }
         c.inchidere();
         c.melctarget(2.3,3000,3000);
     }
@@ -187,6 +201,7 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
             c.inchidere();
             c.kdf(500);
             c.melctarget(2.05,1300,3000);
+            c.setMacetaPower(-1);
         }
     });
 }
