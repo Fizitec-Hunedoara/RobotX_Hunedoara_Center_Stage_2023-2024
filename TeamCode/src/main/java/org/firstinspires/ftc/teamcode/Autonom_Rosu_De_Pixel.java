@@ -21,6 +21,7 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
     int varrez = 2;
+    long lastTime;
     public OpenCvCamera webcam;
     public PachetelNouRosu pipelineRosu = new PachetelNouRosu(this);
     public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
@@ -77,82 +78,89 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, -62.73622, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(new Vector2d(16, -38),Math.toRadians(45)))
-                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                .addDisplacementMarker(() -> new Thread(() ->{
                     c.melctarget(0.82, 1300, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
                     c.kdf(500);
-                    c.setExtensorPower(1,2000);
                 }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(14, -38),Math.toRadians(45)))
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -36),Math.toRadians(90)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    .addDisplacementMarker(() -> new Thread(() -> {
                         c.melctarget(0.82, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
-                        c.setExtensorPower(1,2000);
                     }).start())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -36),Math.toRadians(90)))
                     .build();
         }
         else if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(startPose)
+
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10,-34),Math.toRadians(160)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12,-38),Math.toRadians(160)))
+                    .addTemporalMarker(1,0,() -> new Thread(() -> {
                         c.melctarget(0.82, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
-                        c.setExtensorPower(1,2000);
                     }).start())
                     .build();
         }
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(new Vector2d(53, -29),Math.toRadians(180)))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.setExtensorPower(1,2000);
+                }).start())
                 .build();
         if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16,-48),Math.toRadians(90)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(53,-41),Math.toRadians(180)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.setExtensorPower(1,2000);
+                    }).start())
                     .build();
         }
         else if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(53,-34),Math.toRadians(180)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.setExtensorPower(1,2000);
+                    }).start())
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.deschidere();
-        c.kdf(600);
+        lastTime = System.currentTimeMillis();
+        while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
+            c.deschidere();
+        }
         c.inchidere();
-        Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
-                    c.inchidere();
-                    c.kdf(500);
                     c.melctarget(2.05,1300,3000);
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(33,-11),Math.toRadians(180)))
+                .waitSeconds(0.5)
+                .lineToLinearHeading(new Pose2d(new Vector2d(37,-10.5),Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_pixel();
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(-52,-11),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-52,-10.5),Math.toRadians(180)))
                 .build();
         drive.followTrajectorySequence(ts);
         c.kdf(700);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(30,-10))
+                .lineTo(new Vector2d(30,-11))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.melctarget(0.9, 1300, 3000);
-                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.target(-700, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-200, 1300, c.getSlider(), 3000, 10);
                     c.kdf(500);
@@ -175,8 +183,8 @@ public class Autonom_Rosu_De_Pixel extends LinearOpMode {
         }
         drive.followTrajectorySequence(ts);
         c.kdf(1000);
-        long lastTime = System.currentTimeMillis();
-        while(lastTime + 500 > System.currentTimeMillis()) {
+        lastTime = System.currentTimeMillis();
+        while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
         }
         c.inchidere();

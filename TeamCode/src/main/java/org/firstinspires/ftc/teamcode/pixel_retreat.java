@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class pixel_retreat extends OpMode {
     public boolean stop=false;
     public double melcpoz = 0;
-    ChestiiDeAutonom c = new ChestiiDeAutonom();
+    ChestiiDeAutonomTeleOP c = new ChestiiDeAutonomTeleOP();
     double velo;
     Pid_Controller_Adevarat pid = new Pid_Controller_Adevarat(0,0,0);
     @Override

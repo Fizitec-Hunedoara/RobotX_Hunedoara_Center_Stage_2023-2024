@@ -23,7 +23,7 @@ public class sistemTeleOP extends OpMode {
     double max = 0,lastTime;
     boolean stop = false, sliderState = true, aIntrat = false,aAjuns = true,aInchis = true;
     double intPoz = 0.4, servoPos = 0.0;
-    ChestiiDeAutonom c = new ChestiiDeAutonom();
+    ChestiiDeAutonomTeleOP c = new ChestiiDeAutonomTeleOP();
     AnalogInput potentiometru;
 
     @Override

@@ -25,7 +25,7 @@ public class TeleOPcenterstageRXAlbastru extends OpMode {
     private double lastTime;
     private double pmotorBL, pmotorBR, pmotorFL, pmotorFR;
     private boolean stop = false, aLansat = false, notEntered, aRetras = false, aIntrat = false,aInchis = false;
-    private final ChestiiDeAutonom c = new ChestiiDeAutonom();
+    private final ChestiiDeAutonomTeleOP c = new ChestiiDeAutonomTeleOP();
     public OpenCvCamera webcam;
     public long lastDeschidereTimestamp, inchidereDelay = 500;
     private boolean rightBumperLast;

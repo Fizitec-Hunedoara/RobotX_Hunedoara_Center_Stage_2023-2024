@@ -84,12 +84,12 @@ public class intakeTest extends OpMode {
         public void run() {
             while (!stop) {
                 if(gamepad2.y){
-                    c.setIntakeinatorPosition(0.4);
+                    c.setIntakeinatorPosition(0.44);
                     c.target(-630,1000,c.getSlider(),3000,20);
                     c.melctargetRealAngle(420,1200,3000);
                     c.setMacetaPower(1);
                     c.setMacetaPower(-1);
-                    c.target(-740,1000,c.getSlider(),3000,5);
+                    c.target(-755,1000,c.getSlider(),3000,5);
                     c.kdf(500);
                     c.setIntakeinatorPosition(0.6);
                     c.kdf(1500);
