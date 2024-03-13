@@ -319,9 +319,9 @@ public class ChestiiDeAutonom{
         maceta.setPower(pow);
     }
 
-    public synchronized void spitPixel(int t, double pow) {
-        maceta.setPower(pow);
-        kdf(t);
+    public synchronized void spitPixel() {
+        maceta.setPower(1);
+        kdf(300);
         maceta.setPower(0);
     }
     public void setMelcVelocity(double velocity){
@@ -472,13 +472,26 @@ public class ChestiiDeAutonom{
     }
     public void operation_pixel(){
         setMacetaPower(-1);
-        setIntakeinatorPosition(0.39);
+        setIntakeinatorPosition(0.44);
         target(-630,1000,getSlider(),3000,20);
         melctargetRealAngle(420,1200,3000);
         target(-730,1000,getSlider(),3000,5);
         kdf(1500);
-        setIntakeinatorPosition(0.58);
+        setIntakeinatorPosition(0.6);
         kdf(500);
+        setIntakeinatorPosition(0.3);
+        spitPixel();
+    }
+    public void operation_one_pixel(){
+        setMacetaPower(-1);
+        setIntakeinatorPosition(0.5);
+        target(-630,1000,getSlider(),3000,20);
+        melctargetRealAngle(420,1200,3000);
+        target(-730,1000,getSlider(),3000,5);
+    }
+    public void protocol_retreat(){
+        setIntakeinatorPosition(0.3);
+        melctargetRealAngle(420,1000,3000);
     }
     public void kdf(long t) {
         long lastTime = System.currentTimeMillis();

@@ -314,9 +314,9 @@ public class ChestiiDeAutonomTeleOP{
         maceta.setPower(pow);
     }
 
-    public synchronized void spitPixel(int t, double pow) {
-        maceta.setPower(pow);
-        kdf(t);
+    public synchronized void spitPixel() {
+        maceta.setPower(1);
+        kdf(100);
         maceta.setPower(0);
     }
     public void setMelcVelocity(double velocity){

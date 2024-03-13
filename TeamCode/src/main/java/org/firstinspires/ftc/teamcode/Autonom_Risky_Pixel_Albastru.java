@@ -83,7 +83,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
                 .build();
         if(varrez == 1) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 37), Math.toRadians(315)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 38), Math.toRadians(315)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -96,7 +96,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(14, 33))
+                    .lineTo(new Vector2d(14, 36))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
@@ -108,7 +108,7 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
         }
         else if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 48), Math.toRadians(230)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.melctarget(0.8, 1300, 3000);
@@ -138,17 +138,17 @@ public class Autonom_Risky_Pixel_Albastru extends LinearOpMode {
             drive.followTrajectorySequence(ts);
         }
         long lastTime = System.currentTimeMillis();
-        while(lastTime + 600 > System.currentTimeMillis()) {
+        while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
         }
-        if (!isStopRequested()) {
-            Brat_jos.start();
-        }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.melctarget(2.05,1300,3000);
+                }).start())
                 .splineTo(new Vector2d(10,57),Math.toRadians(180))
                 .lineToLinearHeading(new Pose2d(new Vector2d(-30, 57), Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
-                    c.pixel_advance();
+                    c.operation_pixel();
                 }).start())
                 .splineTo(new Vector2d(-53,44),Math.toRadians(235))
                 .build();

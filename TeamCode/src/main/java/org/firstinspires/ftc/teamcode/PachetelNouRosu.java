@@ -99,10 +99,10 @@ public class PachetelNouRosu extends OpenCvPipeline {
             //aceasta parte reduce partile neregulate din imagine
             //erode micsoreaza pixelii, dilate mareste pixelii
             int i;
-            for(i=1;i<=n && !this.opMode.isStopRequested(); i++) {
+            for(i=1;i<=n; i++) {
                 Imgproc.erode(input, input, element);
             }
-            for(i=1;i<=n+1 && !this.opMode.isStopRequested();i++) {
+            for(i=1;i<=n+1;i++) {
                 Imgproc.dilate(input, input, element);
             }
 

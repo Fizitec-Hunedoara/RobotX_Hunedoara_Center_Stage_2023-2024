@@ -137,17 +137,17 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
             drive.followTrajectorySequence(ts);
         }
         long lastTime = System.currentTimeMillis();
-        while(lastTime + 600 > System.currentTimeMillis()) {
+        while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
         }
         c.inchidere();
-        Brat_jos.start();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.operation_pixel();
+                }).start())
+                .waitSeconds(1)
                 .splineTo(new Vector2d(10,-57),Math.toRadians(180))
                 .lineToLinearHeading(new Pose2d(new Vector2d(-30, -57), Math.toRadians(180)))
-                .addDisplacementMarker(() -> new Thread(() -> {
-                    c.pixel_advance_1();
-                }).start())
                 .splineTo(new Vector2d(-53,-44),Math.toRadians(125))
                 .build();
         if (!isStopRequested()) {
@@ -156,7 +156,6 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(new Vector2d(-54,-37),Math.toRadians(138)))
                     .build();
             drive.followTrajectorySequence(ts);
-            c.pixel_retreat();
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)

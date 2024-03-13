@@ -83,6 +83,9 @@ public class intakeTest extends OpMode {
         @Override
         public void run() {
             while (!stop) {
+                if(gamepad2.a){
+                    c.spitPixel();
+                }
                 if(gamepad2.y){
                     c.setIntakeinatorPosition(0.44);
                     c.target(-630,1000,c.getSlider(),3000,20);

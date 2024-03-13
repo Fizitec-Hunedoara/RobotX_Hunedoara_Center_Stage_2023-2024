@@ -132,12 +132,10 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.kdf(100);
-        if(varrez == 3 || varrez == 1){
-            c.kdf(1000);
+        long lastTime = System.currentTimeMillis();
+        while(lastTime + 500 < System.currentTimeMillis() && !isStopRequested()) {
+            c.deschidere();
         }
-        c.deschidere();
-        c.kdf(500);
         Brat_stop.start();
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())

@@ -96,27 +96,28 @@ public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
         }
         else if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(-38, -40, Math.toRadians(50)))
-                    .lineToLinearHeading(new Pose2d(-32, -32, Math.toRadians(20)))
-                    .lineTo(new Vector2d(-40, -32))
-                    .lineToLinearHeading(new Pose2d(-40, -10, Math.toRadians(190)))
+                    .addDisplacementMarker(()->new Thread(() -> {
+                        c.setExtensorPower(1,2000);
+                    }).start())
+                    .lineToLinearHeading(new Pose2d(-41, -32, Math.toRadians(20)))
+                    .lineToLinearHeading(new Pose2d(-45, -32, Math.toRadians(20)))
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.operation_one_pixel();
+                    }).start())
+                    .lineToLinearHeading(new Pose2d(-45, -10, Math.toRadians(190)))
+                    .lineToLinearHeading(new Pose2d(-50, -10, Math.toRadians(190)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.pixel_advance_1();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(-48,-10))
-                .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                    c.kdf(700);
-                    c.pixel_retreat();
-                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(-48,-10),Math.toRadians(180)))
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .waitSeconds(1000)
                     .lineToLinearHeading(new Pose2d(-48, -10, Math.toRadians(180)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1000);
-                        c.pixel_retreat();
+                        c.melctargetRealAngle(430,1000,3000);
                     }).start())
                     .build();
         }
@@ -130,12 +131,14 @@ public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.setMacetaPower(1);
-        c.kdf(200);
-        c.setMacetaPower(-1);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.protocol_retreat();
+                    c.kdf(1500);
+                    c.spitPixel();
+                }).start())
                 .lineToLinearHeading(new Pose2d(new Vector2d(20, -10),Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, -43),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, -41),Math.toRadians(180)))
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -154,13 +157,20 @@ public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
         c.setMacetaPower(0);
         c.target(-800, 1300, c.getSlider(), 3000, 10);
         c.kdf(200);
-        c.target(-400, 1300, c.getSlider(), 5000, 10);
-        long lastTime = System.currentTimeMillis();
-        while(lastTime + 500 > System.currentTimeMillis()) {
-            c.deschidere();
-        }
+        c.target(-200, 1300, c.getSlider(), 5000, 10);
+        c.deschidereJumate();
+        c.kdf(500);
+        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.setExtensorPower(-1,2000);
+                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, -32), Math.toRadians(180)))
+                .build();
+        drive.followTrajectorySequence(ts);
+        c.deschidere();
+        c.kdf(200);
         c.inchidere();
-        c.melctarget(2.3, 3000, 3000);
+        c.melctarget(2.1,1000,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(47, -40))
                 .lineTo(new Vector2d(47, -10))
