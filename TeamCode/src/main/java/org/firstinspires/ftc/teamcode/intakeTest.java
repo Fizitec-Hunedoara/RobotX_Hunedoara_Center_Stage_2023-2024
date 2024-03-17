@@ -92,7 +92,7 @@ public class intakeTest extends OpMode {
                     c.melctargetRealAngle(420,1200,3000);
                     c.setMacetaPower(1);
                     c.setMacetaPower(-1);
-                    c.target(-755,1000,c.getSlider(),3000,5);
+                    c.target(-700,1000,c.getSlider(),3000,5);
                     c.kdf(500);
                     c.setIntakeinatorPosition(0.6);
                     c.kdf(1500);

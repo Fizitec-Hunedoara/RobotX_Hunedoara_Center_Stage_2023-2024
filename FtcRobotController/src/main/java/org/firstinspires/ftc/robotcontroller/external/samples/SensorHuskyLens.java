@@ -60,9 +60,10 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: HuskyLens", group = "Sensor")
+@Disabled
 public class SensorHuskyLens extends LinearOpMode {
 
-    private final int READ_PERIOD = 10;
+    private final int READ_PERIOD = 1;
 
     private HuskyLens huskyLens;
 
@@ -76,7 +77,7 @@ public class SensorHuskyLens extends LinearOpMode {
          * what is happening on the Driver Station telemetry.  Typical applications
          * would not likely rate limit.
          */
-        Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.MILLISECONDS);
+        Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
 
         /*
          * Immediately expire so that the first time through we'll do the read.
@@ -110,7 +111,7 @@ public class SensorHuskyLens extends LinearOpMode {
          * within the OpMode by calling selectAlgorithm() and passing it one of the values
          * found in the enumeration HuskyLens.Algorithm.
          */
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.OBJECT_RECOGNITION);
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
 
         telemetry.update();
         waitForStart();

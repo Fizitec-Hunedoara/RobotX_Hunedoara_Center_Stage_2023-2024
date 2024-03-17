@@ -104,7 +104,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             else if (varrez == 3) {
                 ts = drive.trajectorySequenceBuilder(startPose)
                         .lineToLinearHeading(new Pose2d(new Vector2d(14, 48), Math.toRadians(230)))
-                        .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
+                        .lineToLinearHeading(new Pose2d(new Vector2d(12, 38), Math.toRadians(200)))
                         .addDisplacementMarker(() -> new Thread(() ->{
                             c.melctarget(0.82, 1300, 3000);
                             c.target(-800, 1300, c.getSlider(), 3000, 10);
@@ -145,7 +145,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
             }
             lastTime = System.currentTimeMillis();
             while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
-                c.deschidere();
+                c.deschidereJumate();
             }
             c.inchidere();
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())

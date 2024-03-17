@@ -80,7 +80,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(new Vector2d(15, 37),Math.toRadians(315)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(14, 38),Math.toRadians(315)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1500);
                     c.melctarget(0.8, 1300, 3000);
@@ -92,7 +92,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                 .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(14, 33))
+                    .lineTo(new Vector2d(14, 36))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -106,7 +106,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         else if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,48),Math.toRadians(230)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10,34),Math.toRadians(200)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12,38),Math.toRadians(200)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -133,9 +133,10 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
+        c.kdf(1000);
         long lastTime = System.currentTimeMillis();
         while(lastTime + 500 < System.currentTimeMillis() && !isStopRequested()) {
-            c.deschidere();
+            c.deschidereJumate();
         }
         Brat_stop.start();
         if(varrez == 3){

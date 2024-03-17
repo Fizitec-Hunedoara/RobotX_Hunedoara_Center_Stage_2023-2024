@@ -88,7 +88,7 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.target(-250, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
@@ -143,12 +143,18 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
         c.inchidere();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
-                    c.operation_pixel();
+                    c.melctargetRealAngle(440,1000,3000);
                 }).start())
                 .waitSeconds(1)
-                .splineTo(new Vector2d(10,-57),Math.toRadians(180))
-                .lineToLinearHeading(new Pose2d(new Vector2d(-30, -57), Math.toRadians(180)))
-                .splineTo(new Vector2d(-53,-44),Math.toRadians(125))
+                .splineTo(new Vector2d(10,-58),Math.toRadians(180))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.setExtensorPower(1,2000);
+                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, -58), Math.toRadians(180)))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.operation_pixel();
+                }).start())
+                .splineTo(new Vector2d(-57,-47),Math.toRadians(135))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
@@ -159,8 +165,8 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
-                .splineTo(new Vector2d(-30,-57),Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(new Vector2d(10,-57),Math.toRadians(180)))
+                .splineTo(new Vector2d(-30,-58),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,-58),Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1000);
                     c.melctarget(0.87, 700, 3000);
@@ -176,13 +182,13 @@ public class Autonom_Risky_Pixel_Rosu extends LinearOpMode {
         if(varrez == 2 || varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .setReversed(true)
-                    .splineTo(new Vector2d(52,-41),Math.toRadians(0))
+                    .splineTo(new Vector2d(52.5,-41),Math.toRadians(0))
                     .build();
         }
         else{
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .setReversed(true)
-                    .splineTo(new Vector2d(52,-37),Math.toRadians(0))
+                    .splineTo(new Vector2d(52.5,-37),Math.toRadians(0))
                     .build();
         }
         if (!isStopRequested()) {

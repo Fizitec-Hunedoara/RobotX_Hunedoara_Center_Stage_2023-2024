@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -45,6 +46,7 @@ public class ChestiiDeAutonomTeleOP{
     private AnalogInput potentiometru;
     private DistanceSensor distanceL, distanceR;
     private RevBlinkinLedDriver led;
+    private ColorSensor colorSensor;
     private boolean sasiuInited,isTeleOp = false;
     LinearOpMode opMode;
     public ChestiiDeAutonomTeleOP(){}
@@ -63,6 +65,9 @@ public class ChestiiDeAutonomTeleOP{
         potentiometru = hard.get(AnalogInput.class, "potentiometru");
 
         led = hard.get(RevBlinkinLedDriver.class, "led");
+
+        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        colorSensor.enableLed(true);
 
         melcjos = hard.get(DcMotorEx.class, "melcjos");
         melcsus = hard.get(DcMotorEx.class, "melcsus");
@@ -470,5 +475,9 @@ public class ChestiiDeAutonomTeleOP{
     public void kdf(long t) {
         long lastTime = System.currentTimeMillis();
         while (lastTime + t > System.currentTimeMillis());
+    }
+    public ColorSensor getColorSensor()
+    {
+        return this.colorSensor;
     }
 }

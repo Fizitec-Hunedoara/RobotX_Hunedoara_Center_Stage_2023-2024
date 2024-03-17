@@ -79,7 +79,7 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, -62.73622, Math.toRadians(90));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(16, -38),Math.toRadians(45)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -38),Math.toRadians(45)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -91,7 +91,7 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
                     .build();
         if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -34),Math.toRadians(90)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -36),Math.toRadians(90)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -105,7 +105,7 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10,-34),Math.toRadians(160)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12,-38),Math.toRadians(160)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
@@ -132,9 +132,10 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
+        c.kdf(2000);
         long lastTime = System.currentTimeMillis();
         while(lastTime + 500 < System.currentTimeMillis() && !isStopRequested()) {
-            c.deschidere();
+            c.deschidereJumate();
         }
         Brat_stop.start();
         if(varrez == 1){

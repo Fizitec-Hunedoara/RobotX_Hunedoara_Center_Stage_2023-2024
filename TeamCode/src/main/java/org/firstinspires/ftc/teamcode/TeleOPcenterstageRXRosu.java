@@ -259,6 +259,7 @@ public class TeleOPcenterstageRXRosu extends OpMode {
         telemetry.addData("melcjos:", c.getMelcJosPosition());
         telemetry.addData("melcsus:", c.getMelcsusPower());
         telemetry.addData("macetaPow:", c.getMacetaPower());
+        telemetry.addData("color r: ", c.getColorSensor().red() + " b: " + c.getColorSensor().blue() + " g: " + c.getColorSensor().green() + " al: " + c.getColorSensor().alpha());
         telemetry.addData("extensorPow:",c.getSlider().getCurrentPosition());
         telemetry.addData("bval:", bval);
         telemetry.addData("bl:", bl);

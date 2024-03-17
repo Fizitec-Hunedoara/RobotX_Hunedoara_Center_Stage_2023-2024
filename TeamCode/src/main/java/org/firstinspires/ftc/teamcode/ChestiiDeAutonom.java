@@ -6,11 +6,13 @@ import static java.lang.Math.sqrt;
 
 import android.util.Log;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -45,6 +47,7 @@ public class ChestiiDeAutonom{
     private AnalogInput potentiometru;
     private DistanceSensor distanceL, distanceR;
     private RevBlinkinLedDriver led;
+    private ColorSensor colorSensor;
     private boolean sasiuInited;
     LinearOpMode opMode;
     public ChestiiDeAutonom(LinearOpMode opMode){
@@ -65,6 +68,9 @@ public class ChestiiDeAutonom{
         potentiometru = hard.get(AnalogInput.class, "potentiometru");
 
         led = hard.get(RevBlinkinLedDriver.class, "led");
+
+        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        colorSensor.enableLed(true);
 
         melcjos = hard.get(DcMotorEx.class, "melcjos");
         melcsus = hard.get(DcMotorEx.class, "melcsus");
@@ -129,7 +135,6 @@ public class ChestiiDeAutonom{
             throw new NullPointerException("Bro sasiul nu e initializat");
         }
     }
-
     public void initAprilTag() {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
@@ -472,29 +477,30 @@ public class ChestiiDeAutonom{
     }
     public void operation_pixel(){
         setMacetaPower(-1);
-        setIntakeinatorPosition(0.44);
+        setIntakeinatorPosition(0.48);
         target(-630,1000,getSlider(),3000,20);
         melctargetRealAngle(420,1200,3000);
-        target(-730,1000,getSlider(),3000,5);
-        kdf(1500);
-        setIntakeinatorPosition(0.6);
-        kdf(500);
-        setIntakeinatorPosition(0.3);
+        target(-700,1000,getSlider(),3000,5);
+        kdf(3000);
         spitPixel();
     }
     public void operation_one_pixel(){
         setMacetaPower(-1);
-        setIntakeinatorPosition(0.5);
-        target(-630,1000,getSlider(),3000,20);
+        setIntakeinatorPosition(0.41);
+        target(-530,1000,getSlider(),3000,20);
         melctargetRealAngle(420,1200,3000);
-        target(-730,1000,getSlider(),3000,5);
     }
     public void protocol_retreat(){
         setIntakeinatorPosition(0.3);
-        melctargetRealAngle(420,1000,3000);
+        melctargetRealAngle(425,1000,3000);
     }
     public void kdf(long t) {
         long lastTime = System.currentTimeMillis();
         while (lastTime + t > System.currentTimeMillis() && !this.opMode.isStopRequested());
+    }
+
+    public boolean isColorWhite()
+    {
+        return (colorSensor.alpha() > 900);
     }
 }
