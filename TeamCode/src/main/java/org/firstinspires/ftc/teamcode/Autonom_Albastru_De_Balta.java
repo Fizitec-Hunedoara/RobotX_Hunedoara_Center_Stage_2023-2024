@@ -135,8 +135,8 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         c.kdf(1000);
         long lastTime = System.currentTimeMillis();
-        while(lastTime + 500 < System.currentTimeMillis() && !isStopRequested()) {
-            c.deschidereJumate();
+        while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
+            c.deschidere();
         }
         Brat_stop.start();
         if(varrez == 3){

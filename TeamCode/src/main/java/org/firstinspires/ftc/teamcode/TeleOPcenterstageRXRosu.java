@@ -150,6 +150,9 @@ public class TeleOPcenterstageRXRosu extends OpMode {
                 else {
                     c.setPlauncherPosition(0.35);
                 }
+                if(gamepad2.dpad_down) {
+                    c.setExtensorPower(-1,2000);
+                }
                 /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }

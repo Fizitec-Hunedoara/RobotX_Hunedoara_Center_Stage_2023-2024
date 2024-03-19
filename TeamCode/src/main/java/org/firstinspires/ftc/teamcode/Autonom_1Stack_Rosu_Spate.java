@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Var_Blue.CV_detectionType;
 import static org.firstinspires.ftc.teamcode.Var_Red.Webcam_h;
 import static org.firstinspires.ftc.teamcode.Var_Red.Webcam_w;
 
@@ -19,7 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class Autonom_Risky_Rosu_Spate extends LinearOpMode {
+public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
     double rectx, recty, hperw, x;
     int varrez = 2;
     public OpenCvCamera webcam;

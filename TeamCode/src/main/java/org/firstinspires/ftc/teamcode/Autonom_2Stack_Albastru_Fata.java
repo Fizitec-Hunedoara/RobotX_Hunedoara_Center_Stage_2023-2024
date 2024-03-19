@@ -7,7 +7,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -17,15 +16,13 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
-@Disabled
-public class AutonomNinge extends LinearOpMode {
-    long lastTime;
+public class Autonom_2Stack_Albastru_Fata extends LinearOpMode {
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
     int varrez = 2,poz2=100;
+    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     public OpenCvCamera webcam;
     public PachetelNouAlbastru pipelineAlbastru = new PachetelNouAlbastru(this);
-    public ChestiiDeAutonom c = new ChestiiDeAutonom(this);
     @Override
     public void runOpMode() throws InterruptedException {
         c.init(hardwareMap);
@@ -82,33 +79,39 @@ public class AutonomNinge extends LinearOpMode {
         Pose2d startPose = new Pose2d(14.783464, 62.73622, Math.toRadians(270));
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
-                .addDisplacementMarker(() -> new Thread(() ->{
-                    c.melctarget(0.82, 1300, 3000);
-                    c.target(-800, 1300, c.getSlider(), 3000, 10);
-                    c.kdf(300);
-                    c.target(-300, 1300, c.getSlider(), 3000, 10);
-                    c.kdf(500);
-                }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(14, 38), Math.toRadians(315)))
+                .lineTo(new Vector2d(0, 0))
                 .build();
-        if (varrez == 2) {
+        if(varrez == 1) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .addDisplacementMarker(() -> new Thread(() ->{
-                        c.melctarget(0.82, 1300, 3000);
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 38), Math.toRadians(315)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.kdf(1500);
+                        c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
+                    .build();
+        }
+        if (varrez == 2) {
+            ts = drive.trajectorySequenceBuilder(startPose)
                     .lineTo(new Vector2d(14, 36))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.melctarget(0.8, 1300, 3000);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(300);
+                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(500);
+                    }).start())
                     .build();
         }
         else if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 48), Math.toRadians(230)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(10, 34), Math.toRadians(200)))
-                    .addDisplacementMarker(() -> new Thread(() ->{
-                        c.melctarget(0.82, 1300, 3000);
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12, 38), Math.toRadians(200)))
+                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                        c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -116,97 +119,113 @@ public class AutonomNinge extends LinearOpMode {
                     }).start())
                     .build();
         }
-        if (!isStopRequested()) {
-            drive.followTrajectorySequence(ts);
-        }
+        drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineToLinearHeading(new Pose2d(new Vector2d(52, 28), Math.toRadians(180)))
-                .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                    c.setExtensorPower(1,2000);
-                }).start())
                 .build();
         if (varrez == 1) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16, 48), Math.toRadians(270)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(52, 40), Math.toRadians(180)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.setExtensorPower(1,2000);
-                    }).start())
                     .build();
         }
         else if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(52, 35), Math.toRadians(180)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.setExtensorPower(1,2000);
-                    }).start())
                     .build();
         }
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
-        lastTime = System.currentTimeMillis();
+        long lastTime = System.currentTimeMillis();
         while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
         }
         c.inchidere();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
-                    c.melctarget(2.05,1300,3000);
+                    c.melctargetRealAngle(440,1000,3000);
                 }).start())
-                .waitSeconds(0.5)
-                .lineToLinearHeading(new Pose2d(new Vector2d(49,60),Math.toRadians(180)))
+                .waitSeconds(1)
+                .splineTo(new Vector2d(10,58),Math.toRadians(180))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.setExtensorPower(1,2000);
+                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 58), Math.toRadians(180)))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.setMacetaPower(-1);
+                    c.setIntakeinatorPosition(0.48);
+                    c.target(-500,1000,c.getSlider(),3000,20);
+                    c.melctargetRealAngle(420,1200,3000);
+                }).start())
+                .splineTo(new Vector2d(-56,45),Math.toRadians(220))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
-            c.kdf(700);
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(-54,37),Math.toRadians(222)))
+                    .build();
+            drive.followTrajectorySequence(ts);
         }
-//        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-//                .lineTo(new Vector2d(30, 11))
-//                .addTemporalMarker(1, 0, () -> new Thread(() -> {
-//                    c.melctarget(0.9, 1300, 3000);
-//                    c.target(-700, 1300, c.getSlider(), 3000, 10);
-//                    c.kdf(300);
-//                    c.target(-200, 1300, c.getSlider(), 3000, 10);
-//                    c.kdf(500);
-//                    c.setExtensorPower(-1,2000);
-//                }).start())
-//                .build();
-//        if (!isStopRequested()) {
-//            drive.followTrajectorySequence(ts);
-//        }
-//        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-//                .lineTo(new Vector2d(52.5, 34))
-//                .build();
-//        if (varrez == 2) {
-//            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-//                    .lineTo(new Vector2d(52.5, 28))
-//                    .build();
-//        }
-//        if (varrez == 1) {
-//            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-//                    .lineTo(new Vector2d(52.5, 39))
-//                    .build();
-//        }
-//        if (!isStopRequested()) {
-//            drive.followTrajectorySequence(ts);
-//        }
-//        lastTime = System.currentTimeMillis();
-//        while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
-//            c.deschidere();
-//        }
-//        c.inchidere();
-//        c.melctarget(2.3,3000,3000);
+        ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                .setReversed(true)
+                .splineTo(new Vector2d(-30,58),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,58),Math.toRadians(180)))
+                .addTemporalMarker(1, 0, () -> new Thread(() -> {
+                    c.kdf(1000);
+                    c.melctarget(0.85, 700, 3000);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(300);
+                    c.target(-300, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(500);
+                }).start())
+                .build();
+        if (!isStopRequested()) {
+            drive.followTrajectorySequence(ts);
+        }
+        if(varrez == 2 || varrez == 3){
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(true)
+                    .splineTo(new Vector2d(52,41),Math.toRadians(0))
+                    .addTemporalMarker(1,0,() -> new Thread(() -> {
+                        c.setExtensorPower(-1,2000);
+                    }).start())
+                    .build();
+        }
+        else{
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(true)
+                    .splineTo(new Vector2d(52,37),Math.toRadians(0))
+                    .addTemporalMarker(1,0,() -> new Thread(() -> {
+                        c.setExtensorPower(-1,2000);
+                    }).start())
+                    .build();
+        }
+        if (!isStopRequested()) {
+            drive.followTrajectorySequence(ts);
+            c.kdf(2300);
+            c.deschidereJumate();
+            c.kdf(200);
+            c.deschidere();
+            c.kdf(500);
+            c.inchidere();
+            c.melctargetRealAngle(440, 3000, 3000);
+            ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(true)
+                    .lineTo(new Vector2d(47,60))
+                    .build();
+            drive.followTrajectorySequence(ts);
+        }
     }
     private final Thread Pus_pe_tabla = new Thread(new Runnable() {
         @Override
         public void run() {
             if(!isStopRequested()) {
                 outOfThread = false;
-                c.melctarget(0.9, 1300, 3000);
+                c.melctarget(0.8, 1300, 3000);
                 c.target(-800, 1300, c.getSlider(), 3000, 10);
                 c.kdf(300);
-                c.target(-200, 1300, c.getSlider(), 3000, 10);
+                c.target(-300, 1300, c.getSlider(), 3000, 10);
                 c.kdf(500);
                 outOfThread = true;
             }
@@ -216,8 +235,9 @@ public class AutonomNinge extends LinearOpMode {
         @Override
         public void run() {
             if(!isStopRequested()) {
+                c.inchidere();
                 c.kdf(500);
-                c.melctarget(2.3, 1300, 3000);
+                c.melctarget(2.2, 1300, 3000);
             }
         }
     });

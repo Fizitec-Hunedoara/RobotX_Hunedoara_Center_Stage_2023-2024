@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,7 +17,6 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-
 @TeleOp
 public class ColorSensorV0 extends OpMode {
     boolean stop = false;
@@ -41,18 +41,10 @@ public class ColorSensorV0 extends OpMode {
         telemetry.update();
         if(gamepad1.x){
             drive.setMotorPowers(-0.4,0.4,-0.4,0.4);
-            while(colorSensor.red() < 4000 && colorSensor.blue() < 4000 && colorSensor.green() < 4000){
+            while(colorSensor.red() < 2000 && colorSensor.blue() < 2000 && colorSensor.green() < 2000 && !stop){
                 telemetry.addData("aaaaa","aaaa");
                 telemetry.update();
             }
-            drive.setMotorPowers(0,0,0,0);
-            c.kdf(300);
-            drive.setMotorPowers(0.4,-0.4,0.4,-0.4);
-            while(colorSensor.red() < 4000 && colorSensor.blue() < 4000 && colorSensor.green() < 4000){
-                telemetry.addData("aaaaa","aaaa");
-                telemetry.update();
-            }
-            drive.setMotorPowers(0,0,0,0);
         }
     }
     public void stop(){stop = true;}

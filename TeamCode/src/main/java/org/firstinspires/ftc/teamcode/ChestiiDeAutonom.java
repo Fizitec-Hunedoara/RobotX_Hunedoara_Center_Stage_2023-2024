@@ -26,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -193,6 +194,10 @@ public class ChestiiDeAutonom{
         setLedPattern(pattern);
         kdf(t);
     }
+    public int getBlue(){return colorSensor.blue();}
+    public int getGreen(){return colorSensor.green();}
+    public int getRed(){return colorSensor.red();}
+    public int getAlpha(){return colorSensor.alpha();}
     public double getGhearaLPosition(){
         return ghearaL.getPosition();
     }
@@ -236,7 +241,12 @@ public class ChestiiDeAutonom{
         ghearaR.setPosition(1);
         ghearaL.setPosition(0);
     }
-
+    public synchronized void aliniereColor(SampleMecanumDrive drive, int valmax){
+        drive.setMotorPowers(-0.4,0.4,-0.4,0.4);
+        long lastTime = System.currentTimeMillis();
+        while(colorSensor.red() < valmax && colorSensor.blue() < valmax && colorSensor.green() < valmax && !opMode.isStopRequested() && lastTime + 1000 > System.currentTimeMillis());
+        drive.setMotorPowers(0,0,0,0);
+    }
     public synchronized void target(double poz, double vel, DcMotorEx motor, double t, int tolerance) {
         if (motor.getCurrentPosition() < poz) {
             motor.setVelocity(vel);
@@ -478,9 +488,9 @@ public class ChestiiDeAutonom{
     public void operation_pixel(){
         setMacetaPower(-1);
         setIntakeinatorPosition(0.48);
-        target(-630,1000,getSlider(),3000,20);
+        target(-500,1000,getSlider(),3000,20);
         melctargetRealAngle(420,1200,3000);
-        target(-700,1000,getSlider(),3000,5);
+       //target(-700,1000,getSlider(),3000,5);
         kdf(3000);
         spitPixel();
     }

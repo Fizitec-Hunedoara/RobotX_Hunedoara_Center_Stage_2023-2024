@@ -17,7 +17,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
-public class Autonom_Risky_Albastru_Spate extends LinearOpMode {
+public class Autonom_1Stack_Albastru_Spate extends LinearOpMode {
     double rectx, recty, hperw, x;
     int varrez = 2;
     public OpenCvCamera webcam;

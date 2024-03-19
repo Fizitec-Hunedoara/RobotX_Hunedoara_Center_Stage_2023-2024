@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.openftc.easyopencv.OpenCvCamera;
-
+@Disabled
 @Autonomous
 public class luatDinStack extends LinearOpMode {
     double rectx, recty, hperw,x;

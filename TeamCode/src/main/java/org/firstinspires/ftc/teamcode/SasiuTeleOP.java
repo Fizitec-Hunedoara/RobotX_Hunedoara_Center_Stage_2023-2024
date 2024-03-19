@@ -8,11 +8,12 @@ import static java.lang.Math.floorDiv;
 
 import android.widget.Switch;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Disabled
 @TeleOp
 public class SasiuTeleOP extends OpMode {
     public Switch swish;

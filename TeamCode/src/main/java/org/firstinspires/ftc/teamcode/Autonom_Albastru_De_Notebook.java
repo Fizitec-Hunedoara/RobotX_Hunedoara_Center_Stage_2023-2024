@@ -16,7 +16,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
-public class Autonom_Albastru_De_Pixel extends LinearOpMode {
+public class Autonom_Albastru_De_Notebook extends LinearOpMode {
     long lastTime;
     double rectx, recty, hperw,x;
     boolean outOfThread = false;
@@ -155,12 +155,14 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
                     .waitSeconds(0.5)
                     .lineToLinearHeading(new Pose2d(new Vector2d(33,10),Math.toRadians(180)))
                     .addDisplacementMarker(() -> new Thread(() -> {
+                        c.kdf(1500);
                         c.operation_pixel();
                     }).start())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(-43, 10), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(-43, 13), Math.toRadians(180)))
                     .build();
             if (!isStopRequested()) {
                 drive.followTrajectorySequence(ts);
+                c.aliniereColor(drive,2000);
                 c.kdf(700);
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -176,6 +178,7 @@ public class Autonom_Albastru_De_Pixel extends LinearOpMode {
                     .build();
             if (!isStopRequested()) {
                 drive.followTrajectorySequence(ts);
+
             }
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(52.5, 34))
