@@ -153,6 +153,7 @@ public class TeleOPcenterstageRXAlbastru extends OpMode {
                 if(gamepad1.dpad_down) {
                     c.setExtensorPower(-1,2000);
                 }
+                Log.wtf("e ok",Float.toString(System.currentTimeMillis()));
                 /*if (gamepad2.x) {
                     c.setExtensorPower(-1, 3000);
                 }

@@ -144,7 +144,14 @@ public class Autonom_1Stack_Albastru_Spate extends LinearOpMode {
                     c.inchidere();
                 }).start())
                 .lineToLinearHeading(new Pose2d(new Vector2d(20, 10),Math.toRadians(180)))
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, 40),Math.toRadians(180)))
+                .addDisplacementMarker(() -> new Thread(() -> {
+                    c.melctarget(0.87, 3000, 4000);
+                    c.setMacetaPower(0);
+                    c.target(-800, 1300, c.getSlider(), 3000, 10);
+                    c.kdf(200);
+                    c.target(-100, 1300, c.getSlider(), 5000, 10);
+                }).start())
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, 42),Math.toRadians(180)))
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -156,6 +163,13 @@ public class Autonom_1Stack_Albastru_Spate extends LinearOpMode {
                         c.setExtensorPower(-1,2000);
                     }).start())
                     .lineToLinearHeading(new Pose2d(new Vector2d(20, 6),Math.toRadians(180)))
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.melctarget(0.87, 3000, 4000);
+                        c.setMacetaPower(0);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(200);
+                        c.target(-100, 1300, c.getSlider(), 5000, 10);
+                    }).start())
                     .lineToLinearHeading(new Pose2d(new Vector2d(53, 37),Math.toRadians(180)))
                     .build();
         }
@@ -169,20 +183,17 @@ public class Autonom_1Stack_Albastru_Spate extends LinearOpMode {
                         c.setExtensorPower(-1,2000);
                     }).start())
                     .lineToLinearHeading(new Pose2d(new Vector2d(20, 6),Math.toRadians(180)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53, 32),Math.toRadians(180)))
+                    .addDisplacementMarker(()->new Thread(()->{
+                        c.melctarget(0.87, 3000, 4000);
+                        c.setMacetaPower(0);
+                        c.target(-800, 1300, c.getSlider(), 3000, 10);
+                        c.kdf(200);
+                        c.target(-100, 1300, c.getSlider(), 5000, 10);
+                    }).start())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53, 33),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.melctarget(0.87, 3000, 4000);
-        c.setMacetaPower(0);
-        c.target(-800, 1300, c.getSlider(), 3000, 10);
-        c.kdf(200);
-        if(varrez == 2) {
-            c.target(-100, 1300, c.getSlider(), 5000, 10);
-        }
-        else{
-            c.target(-200, 1300, c.getSlider(), 5000, 10);
-        }
         c.deschidereJumate();
         c.kdf(500);
         c.target(-300, 1300, c.getSlider(), 5000, 10);
@@ -193,9 +204,8 @@ public class Autonom_1Stack_Albastru_Spate extends LinearOpMode {
         c.kdf(300);
         c.melctarget(2.1,1000,3000);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(47, 40))
-                .lineTo(new Vector2d(47, 10))
-                .lineTo(new Vector2d(62, 10))
+                .lineToLinearHeading(new Pose2d(new Vector2d(40, 10),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(62, 10),Math.toRadians(180)))
                 .build();
         drive.followTrajectorySequence(ts);
     }
