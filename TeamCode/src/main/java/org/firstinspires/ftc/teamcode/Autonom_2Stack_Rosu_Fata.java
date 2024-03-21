@@ -146,11 +146,11 @@ public class Autonom_2Stack_Rosu_Fata extends LinearOpMode {
                     c.melctargetRealAngle(440,1000,3000);
                 }).start())
                 .waitSeconds(1)
-                .splineTo(new Vector2d(10,-58),Math.toRadians(180))
+                .splineTo(new Vector2d(10,-57.5),Math.toRadians(180))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.setExtensorPower(1,2000);
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(-30, -58), Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, -57.5), Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_pixel();
                 }).start())

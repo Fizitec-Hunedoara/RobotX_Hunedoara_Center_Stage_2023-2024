@@ -110,16 +110,18 @@ public class Autonom_1Stack_Rosu_Outside extends LinearOpMode {
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_one_pixel();
+                    c.kdf(5000);
+                    c.protocol_retreat();
                 }).start())
                 .lineToLinearHeading(new Pose2d(new Vector2d(-30, -58), Math.toRadians(180)))
                 .waitSeconds(0.5)
-                .splineTo(new Vector2d(-56,-44),Math.toRadians(140))
+                .splineTo(new Vector2d(-56,-44),Math.toRadians(135))
                 .setReversed(true)
                 .splineTo(new Vector2d(-30,-58),Math.toRadians(0))
                 .lineToSplineHeading(new Pose2d(new Vector2d(30,-58),Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1000);
-                    c.melctarget(0.85, 700, 3000);
+                    c.melctarget(0.87, 700, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -129,17 +131,17 @@ public class Autonom_1Stack_Rosu_Outside extends LinearOpMode {
         drive.followTrajectorySequence(ts);
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-30),Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-34),Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-38),Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-36),Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-44),Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,-38),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);

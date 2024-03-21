@@ -54,17 +54,14 @@ public class Autonom_1Stack_Albastru_Outside extends LinearOpMode {
                 telemetry.addData("height / width:", hperw);
                 x = pipelineRosu.getRect().x + pipelineRosu.getRect().width/2.0;
                 telemetry.addData("x:",pipelineRosu.getRect().x + pipelineRosu.getRect().width/2);
-                if(x==0){
-                    varrez = 3;
-                }
-                else if (x < 500 && x > 150) {
+                if (x < 350 && x > 100) {
                     varrez = 2;
                 }
-                else if(x < 150){
-                    varrez = 1;
-                }
-                else{
+                else if (x > 350) {
                     varrez = 3;
+                }
+                else {
+                    varrez = 1;
                 }
                 telemetry.addData("caz:", varrez);
             }
@@ -110,17 +107,18 @@ public class Autonom_1Stack_Albastru_Outside extends LinearOpMode {
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_one_pixel();
-                    c.spitPixel();
+                    c.kdf(5000);
+                    c.protocol_retreat();
                 }).start())
                 .lineToLinearHeading(new Pose2d(new Vector2d(-30, 58), Math.toRadians(180)))
                 .waitSeconds(0.5)
-                .splineTo(new Vector2d(-56,44),Math.toRadians(140))
+                .splineTo(new Vector2d(-56,44),Math.toRadians(225))
                 .setReversed(true)
                 .splineTo(new Vector2d(-30,58),Math.toRadians(0))
                 .lineToSplineHeading(new Pose2d(new Vector2d(30,58),Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1000);
-                    c.melctarget(0.85, 700, 3000);
+                    c.melctarget(0.87, 700, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -135,15 +133,16 @@ public class Autonom_1Stack_Albastru_Outside extends LinearOpMode {
         }
         else if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,38),Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,36),Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,44),Math.toRadians(180)))
+                    .lineToSplineHeading(new Pose2d(new Vector2d(52.5,38),Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
+        c.kdf(2000);
         c.deschidereJumate();
         c.kdf(500);
         c.deschidere();

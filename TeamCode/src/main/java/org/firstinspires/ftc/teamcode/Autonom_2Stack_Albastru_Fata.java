@@ -147,11 +147,11 @@ public class Autonom_2Stack_Albastru_Fata extends LinearOpMode {
                     c.melctargetRealAngle(440,1000,3000);
                 }).start())
                 .waitSeconds(1)
-                .splineTo(new Vector2d(10,58),Math.toRadians(180))
+                .splineTo(new Vector2d(10,57.5),Math.toRadians(180))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.setExtensorPower(1,2000);
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 58), Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-30, 57.5), Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.setMacetaPower(-1);
                     c.setIntakeinatorPosition(0.48);
@@ -169,8 +169,8 @@ public class Autonom_2Stack_Albastru_Fata extends LinearOpMode {
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true)
-                .splineTo(new Vector2d(-30,58),Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(new Vector2d(10,58),Math.toRadians(180)))
+                .splineTo(new Vector2d(-30,57.5),Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(new Vector2d(10,57.5),Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.kdf(1000);
                     c.melctarget(0.85, 700, 3000);
