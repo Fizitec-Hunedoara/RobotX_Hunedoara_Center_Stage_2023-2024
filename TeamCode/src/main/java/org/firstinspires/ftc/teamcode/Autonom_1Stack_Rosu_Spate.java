@@ -109,7 +109,7 @@ public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
                         c.operation_one_pixel();
                     }).start())
                     .lineToLinearHeading(new Pose2d(-45, -10, Math.toRadians(190)))
-                    .lineToLinearHeading(new Pose2d(-50, -10, Math.toRadians(190)))
+                    .lineToLinearHeading(new Pose2d(-54, -10, Math.toRadians(190)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
@@ -123,7 +123,7 @@ public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
                     }).start())
                     .lineToLinearHeading(new Pose2d(-47, -10, Math.toRadians(180)))
                     .waitSeconds(2)
-                    .lineToLinearHeading(new Pose2d(-52, -10, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(-54, -10, Math.toRadians(180)))
                     .build();
         }
         else if (varrez == 1) {
@@ -133,7 +133,7 @@ public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
                     }).start())
                     .lineToLinearHeading(new Pose2d(-48,-10,Math.toRadians(180)))
                     .waitSeconds(2)
-                    .lineToLinearHeading(new Pose2d(-52, -10, Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(-54, -10, Math.toRadians(180)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
@@ -153,7 +153,7 @@ public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
                     c.kdf(200);
                     c.target(-100, 1300, c.getSlider(), 5000, 10);
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, -42),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, -44),Math.toRadians(180)))
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -172,7 +172,7 @@ public class Autonom_1Stack_Rosu_Spate extends LinearOpMode {
                         c.kdf(200);
                         c.target(-100, 1300, c.getSlider(), 5000, 10);
                     }).start())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53, -37),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53, -39),Math.toRadians(180)))
                     .build();
         }
         if (varrez == 1) {

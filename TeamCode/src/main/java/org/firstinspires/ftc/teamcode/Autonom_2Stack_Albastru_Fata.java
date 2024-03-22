@@ -101,7 +101,7 @@ public class Autonom_2Stack_Albastru_Fata extends LinearOpMode {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.target(-100, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
@@ -126,7 +126,7 @@ public class Autonom_2Stack_Albastru_Fata extends LinearOpMode {
         if (varrez == 1) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16, 48), Math.toRadians(270)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 40), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 42), Math.toRadians(180)))
                     .build();
         }
         else if (varrez == 2) {

@@ -487,12 +487,10 @@ public class ChestiiDeAutonom{
     }
     public void operation_pixel(){
         setMacetaPower(-1);
-        setIntakeinatorPosition(0.22);
+        setIntakeinatorPosition(0.46);
         target(-500,1000,getSlider(),3000,20);
         melctargetRealAngle(422,1200,3000);
        //target(-700,1000,getSlider(),3000,5);
-        kdf(3000);
-        spitPixel();
     }
     public void operation_one_pixel(){
         setMacetaPower(-1);

@@ -81,7 +81,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .addDisplacementMarker(() -> new Thread(() ->{
-                    c.melctarget(0.82, 1300, 3000);
+                    c.melctarget(0.86, 1300, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -92,21 +92,21 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .addDisplacementMarker(() -> new Thread(() ->{
-                        c.melctarget(0.82, 1300, 3000);
+                        c.melctarget(0.86, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.target(-100, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
-                    .lineTo(new Vector2d(14, 36))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 36),Math.toRadians(180)))
                     .build();
         }
         else if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineToLinearHeading(new Pose2d(new Vector2d(14, 48), Math.toRadians(230)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(12, 38), Math.toRadians(200)))
-                    .addDisplacementMarker(() -> new Thread(() ->{
-                        c.melctarget(0.82, 1300, 3000);
+                    .addTemporalMarker(1,0,() -> new Thread(() ->{
+                        c.melctarget(0.86, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -134,7 +134,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         }
         else if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 35), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 33), Math.toRadians(180)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.setExtensorPower(1,2000);
                     }).start())
@@ -143,6 +143,9 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
+        if(varrez == 1){
+            c.kdf(1000);
+        }
         lastTime = System.currentTimeMillis();
         while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidereJumate();
@@ -150,14 +153,16 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         c.inchidere();
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .addDisplacementMarker(() -> new Thread(() -> {
-                    c.melctarget(2.05,1300,3000);
+                    c.melctargetRealAngle(440,1300,3000);
                 }).start())
                 .waitSeconds(0.5)
                 .lineToLinearHeading(new Pose2d(new Vector2d(33,10),Math.toRadians(180)))
                 .addDisplacementMarker(() -> new Thread(() -> {
                     c.operation_pixel();
+//                    c.kdf(500);
+//                    c.setIntakeinatorPosition(0.48);
                 }).start())
-                .lineToLinearHeading(new Pose2d(new Vector2d(-43, 10), Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(-54, 10), Math.toRadians(180)))
                 .build();
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
@@ -166,7 +171,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(30, 11))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                    c.melctarget(0.9, 1300, 3000);
+                    c.melctarget(0.87, 1300, 3000);
                     c.target(-700, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-200, 1300, c.getSlider(), 3000, 10);
@@ -182,7 +187,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
                 .build();
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(52.5, 28))
+                    .lineTo(new Vector2d(52.5, 29))
                     .build();
         }
         if (varrez == 1) {
@@ -193,6 +198,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
+        c.kdf(500);
         lastTime = System.currentTimeMillis();
         while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();

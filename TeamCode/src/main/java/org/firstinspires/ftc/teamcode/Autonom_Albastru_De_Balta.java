@@ -98,7 +98,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-300, 1300, c.getSlider(), 3000, 10);
+                        c.target(-100, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
