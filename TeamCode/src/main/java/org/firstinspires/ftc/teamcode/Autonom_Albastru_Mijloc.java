@@ -70,7 +70,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
                 }
                 telemetry.addData("caz:", varrez);
             } catch (Exception E) {
-                varrez = 1;
+                varrez = 3;
                 telemetry.addData("Webcam error:", "please restart");
                 telemetry.update();
             }
@@ -81,7 +81,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .addDisplacementMarker(() -> new Thread(() ->{
-                    c.melctarget(0.86, 1300, 3000);
+                    c.melctarget(0.8, 1300, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -95,7 +95,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
                         c.melctarget(0.86, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-100, 1300, c.getSlider(), 3000, 10);
+                        c.target(-200, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .lineToLinearHeading(new Pose2d(new Vector2d(14, 36),Math.toRadians(180)))
@@ -106,7 +106,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(new Vector2d(15, 48), Math.toRadians(230)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(12, 38), Math.toRadians(200)))
                     .addTemporalMarker(1,0,() -> new Thread(() ->{
-                        c.melctarget(0.86, 1300, 3000);
+                        c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -118,7 +118,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
             drive.followTrajectorySequence(ts);
         }
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(52, 28), Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(52, 29), Math.toRadians(180)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
                     c.setExtensorPower(1,2000);
                 }).start())
@@ -134,7 +134,7 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         }
         else if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 33), Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 34), Math.toRadians(180)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.setExtensorPower(1,2000);
                     }).start())
@@ -185,12 +185,12 @@ public class Autonom_Albastru_Mijloc extends LinearOpMode {
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .lineTo(new Vector2d(52.5, 34))
                 .build();
-        if (varrez == 2) {
+        if (varrez == 3) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(52.5, 29))
                     .build();
         }
-        if (varrez == 1) {
+        if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(52.5, 39))
                     .build();

@@ -81,7 +81,6 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(14, -38),Math.toRadians(45)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
@@ -93,11 +92,11 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(14, -36),Math.toRadians(90)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
-                        c.melctarget(0.8, 1300, 3000);
+                        c.kdf(500);
+                        c.melctarget(0.84, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-100, 1300, c.getSlider(), 3000, 10);
+                        c.target(-200, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
@@ -105,15 +104,15 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(12,-38),Math.toRadians(160)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.kdf(500);
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12,-38),Math.toRadians(160)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
@@ -132,7 +131,12 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.kdf(2000);
+        if(varrez == 1 || varrez == 3) {
+            c.kdf(300);
+        }
+        else{
+            c.kdf(1000);
+        }
         long lastTime = System.currentTimeMillis();
         while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
@@ -181,4 +185,8 @@ public class Autonom_Rosu_De_Balta extends LinearOpMode {
             c.melctarget(2.3,1300,3000);
         }
     });
+
+    void noroc() {
+        return;
+    }
 }

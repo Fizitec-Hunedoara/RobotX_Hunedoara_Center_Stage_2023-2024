@@ -70,7 +70,7 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                 telemetry.addData("caz:", varrez);
             }
             catch (Exception E) {
-                varrez = 1;
+                varrez = 3;
                 telemetry.addData("Webcam error:", "please restart");
                 telemetry.update();
             }
@@ -82,7 +82,6 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(new Vector2d(14, 38),Math.toRadians(315)))
                 .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                    c.kdf(1500);
                     c.melctarget(0.8, 1300, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
@@ -94,11 +93,11 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineTo(new Vector2d(14, 36))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
-                        c.melctarget(0.8, 1300, 3000);
+                        c.kdf(500);
+                        c.melctarget(0.84, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-100, 1300, c.getSlider(), 3000, 10);
+                        c.target(-200, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
@@ -106,25 +105,25 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
         else if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(startPose)
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,48),Math.toRadians(230)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(12,38),Math.toRadians(200)))
-                    .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.kdf(1500);
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.kdf(500);
                         c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(12,38),Math.toRadians(200)))
                     .build();
         }
         drive.followTrajectorySequence(ts);
         ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineToLinearHeading(new Pose2d(new Vector2d(53, 28.5),Math.toRadians(180)))
+                .lineToLinearHeading(new Pose2d(new Vector2d(53, 29),Math.toRadians(180)))
                 .build();
         if(varrez == 1){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16,48),Math.toRadians(270)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(52, 40),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(52,40),Math.toRadians(180)))
                     .build();
         }
         else if(varrez == 2){
@@ -133,7 +132,12 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
                     .build();
         }
         drive.followTrajectorySequence(ts);
-        c.kdf(1000);
+        if(varrez == 1 || varrez == 3) {
+            c.kdf(300);
+        }
+        else{
+            c.kdf(1000);
+        }
         long lastTime = System.currentTimeMillis();
         while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
@@ -181,4 +185,5 @@ public class Autonom_Albastru_De_Balta extends LinearOpMode {
             c.melctarget(2.3,1300,3000);
         }
     });
+    //acest comentariu aduce noroc - Tea-Borgs(albastru)
 }

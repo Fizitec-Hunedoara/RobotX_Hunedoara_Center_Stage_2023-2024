@@ -80,7 +80,7 @@ public class Autonom_Rosu_Mijloc extends LinearOpMode {
         drive.setPoseEstimate(startPose);
         TrajectorySequence ts = drive.trajectorySequenceBuilder(startPose)
                 .addDisplacementMarker(() -> new Thread(() ->{
-                    c.melctarget(0.86, 1300, 3000);
+                    c.melctarget(0.8, 1300, 3000);
                     c.target(-800, 1300, c.getSlider(), 3000, 10);
                     c.kdf(300);
                     c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -95,7 +95,7 @@ public class Autonom_Rosu_Mijloc extends LinearOpMode {
                         c.melctarget(0.86, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
-                        c.target(-100, 1300, c.getSlider(), 3000, 10);
+                        c.target(-200, 1300, c.getSlider(), 3000, 10);
                         c.kdf(500);
                     }).start())
                     .build();
@@ -105,7 +105,7 @@ public class Autonom_Rosu_Mijloc extends LinearOpMode {
                     .lineToLinearHeading(new Pose2d(new Vector2d(15,-48),Math.toRadians(130)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(12,-38),Math.toRadians(160)))
                     .addTemporalMarker(1,0,() -> new Thread(() -> {
-                        c.melctarget(0.86, 1300, 3000);
+                        c.melctarget(0.8, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-300, 1300, c.getSlider(), 3000, 10);
@@ -123,7 +123,7 @@ public class Autonom_Rosu_Mijloc extends LinearOpMode {
         if(varrez == 3){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(new Vector2d(16,-48),Math.toRadians(90)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-42),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-40),Math.toRadians(180)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.setExtensorPower(1,2000);
                     }).start())
@@ -131,7 +131,7 @@ public class Autonom_Rosu_Mijloc extends LinearOpMode {
         }
         else if(varrez == 2){
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-33),Math.toRadians(180)))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(53,-34),Math.toRadians(180)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
                         c.setExtensorPower(1,2000);
                     }).start())

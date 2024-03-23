@@ -95,9 +95,9 @@ public class Autonom_2Stack_Rosu_Fata extends LinearOpMode {
         }
         if (varrez == 2) {
             ts = drive.trajectorySequenceBuilder(startPose)
-                    .lineTo(new Vector2d(14, -36))
+                    .lineToLinearHeading(new Pose2d(new Vector2d(14, -36),Math.toRadians(90)))
                     .addTemporalMarker(1, 0, () -> new Thread(() -> {
-                        c.melctarget(0.8, 1300, 3000);
+                        c.melctarget(0.86, 1300, 3000);
                         c.target(-800, 1300, c.getSlider(), 3000, 10);
                         c.kdf(300);
                         c.target(-100, 1300, c.getSlider(), 3000, 10);
@@ -136,8 +136,14 @@ public class Autonom_2Stack_Rosu_Fata extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
         }
+        if(varrez == 1 || varrez == 3) {
+            c.kdf(300);
+        }
+        else{
+               c.kdf(1000);
+        }
         long lastTime = System.currentTimeMillis();
-        while(lastTime + 600 > System.currentTimeMillis() && !isStopRequested()) {
+        while(lastTime + 500 > System.currentTimeMillis() && !isStopRequested()) {
             c.deschidere();
         }
         c.inchidere();
@@ -159,7 +165,10 @@ public class Autonom_2Stack_Rosu_Fata extends LinearOpMode {
         if (!isStopRequested()) {
             drive.followTrajectorySequence(ts);
             ts = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToLinearHeading(new Pose2d(new Vector2d(-54,-37),Math.toRadians(140)))
+                    .addDisplacementMarker(() -> new Thread(() -> {
+                        c.setIntakeinatorPosition(0.52);
+                    }).start())
+                    .lineToLinearHeading(new Pose2d(new Vector2d(-54,-36),Math.toRadians(140)))
                     .build();
             drive.followTrajectorySequence(ts);
         }
